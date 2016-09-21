@@ -19,7 +19,7 @@ static ErrType CheckNeedLoadEustia(const IPCInfo* info,
     switch (info->injectType)
     {
     case InjectType::HookAuto:
-        if (GetCurrentProcessId() == info->destProcessId)
+        if ((intptr)GetCurrentProcessId() == info->destProcessId)
         {
             *isLoadImmediately = true;
         }
@@ -45,6 +45,7 @@ void LoadEustia(IPCInfo* info)
 
 static DWORD WINAPI MainProc(LPVOID _)
 {
+    UNREFERENCED_PARAMETER(_);
     static bool isInited = false;
     if (isInited)
     {

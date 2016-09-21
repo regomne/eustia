@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="3rdparty">
+      <UniqueIdentifier>{32b64db5-8c90-4a57-9b04-b1415052076d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3rdparty\cmdline">
+      <UniqueIdentifier>{37d8eb2d-4a5f-4313-b464-026794e0b4ef}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\Injector\injector.cpp">
@@ -64,6 +70,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\Injector\globalvars_i.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\3rdParty\cmdline\cmdline.h">
+      <Filter>3rdparty\cmdline</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

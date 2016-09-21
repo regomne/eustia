@@ -4,7 +4,7 @@
 #include "src/log.h"
 #include "src/utils.h"
 #include "src/Injector/injector.h"
-#include "src/Injector/globavars_i.h"
+#include "src/Injector/globalvars_i.h"
 
 using namespace std;
 using namespace Eustia;
@@ -21,9 +21,9 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
     auto logPath = wstring(GlobalVars::ModulePath) + L"injector.log";
     EustiaLogger::GetLogger()->SetLogFileName(logPath.c_str());
     EustiaLogger::GetLogger()->SetCurrentLogLevel(EustiaLogger::LogLevelInfo);
-    auto cmd = GetCommandLine();
-    int cmdCnt;
-    auto cmds = CommandLineToArgvW(cmd, &cmdCnt);
+    //auto cmd = GetCommandLine();
+    //int cmdCnt;
+    //auto cmds = CommandLineToArgvW(cmd, &cmdCnt);
 //     if (cmds == nullptr || cmdCnt < 2)
 //     {
 //         LOGDEBUG("need 2 args.");

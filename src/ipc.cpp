@@ -12,7 +12,7 @@ namespace Eustia
 MemoryIPC* MemoryIPC::Init(InitType type, const char* ipcName)
 {
     auto ipc = new MemoryIPC();
-    auto ret = ipc->Init(type, ipcName);
+    auto ret = ipc->InitP(type, ipcName);
     if (!IsSuccess(ret))
     {
         LOGERROR("Can't init MemoryIPC:%s, err:%d", ipcName, (int)ret);
@@ -38,7 +38,7 @@ ErrType MemoryIPC::GetMemoryPointer(void** ptr)
 
 ErrType MemoryIPC::ReleaseMemoryPointer()
 {
-    ErrType ret;
+    ErrType ret = ErrType::Success;
     if (memPtr_)
     {
         ret = IPCHelper::UnlockSharedMemory(memKey_, memPtr_);
@@ -57,7 +57,7 @@ void MemoryIPC::Dispose()
     delete this;
 }
 
-ErrType MemoryIPC::Init(InitType type, const char* ipcName)
+ErrType MemoryIPC::InitP(InitType type, const char* ipcName)
 {
     string ipcNameBase = ipcName;
     auto ipcMemNameStr = ipcNameBase + "_mem";

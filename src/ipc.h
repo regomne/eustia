@@ -49,7 +49,7 @@ private:
     MemoryIPC() :memKey_(0), memPtr_(nullptr) {}
     ~MemoryIPC() {}
 
-    ErrType Init(InitType type, const char* ipcName);
+    ErrType InitP(InitType type, const char* ipcName);
     ErrType OpenNewIPC(const char* ipcMemName);
     ErrType OpenExistingIPC(const char* ipcMemName);
     ErrType OpenIPC(const char* ipcMemName);
