@@ -36,7 +36,7 @@ public:
     };
 
 public:
-    static MemoryIPC* InitOneIPC(InitType type, const char* ipcName);
+    static MemoryIPC* Init(InitType type, const char* ipcName);
 
     ErrType GetMemoryPointer(void** ptr);
     ErrType ReleaseMemoryPointer();
@@ -65,12 +65,13 @@ struct IPCInfo
     intptr hostProcessId; //process injector
     intptr destProcessId; //process to inject 
     intptr destThreadId; //thread to inject
-    u8 hostIp[4]; //always 127.0.0.1
+    IPAddrType ipAddrType;
+    u8 hostIp[16]; //always 127.0.0.1
     u16 hostPort; //host port to connect, little endian
     wchar eustiaDllName[MAX_NAME_LEN_OF_EUSTIA_DLL]; //end with zero
     union
     {
-        DWORD keyToWait; //if type is keyboard hook
+        u32 keyToWait; //if type is keyboard hook
     };
 };
 

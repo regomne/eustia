@@ -67,6 +67,12 @@ enum class InjectType
     LoadLib, //CreateAndInject and OpenAndInject
 };
 
+enum class IPAddrType
+{
+    IPv4,
+    IPv6,
+};
+
 }
 
 #endif

@@ -1,14 +1,14 @@
 #include <windows.h>
+#include <string>
 
 #include "src/ipc.h"
+#include "src/utils.h"
+#include "src/HookDll/globalvars_h.h"
 
+using namespace std;
 using namespace Eustia;
 
-HANDLE g_DllHandle;
-bool g_NeedDelayCheck;
-intptr g_CheckProcessId;
-
-static ErrType CheckNeedLoadEustia(IPCInfo* info, 
+static ErrType CheckNeedLoadEustia(const IPCInfo* info, 
     bool* isLoadImmediately, 
     bool* isNeedSelfUnload,
     bool* isNeedDelayCheck) //check when hook callback runs
@@ -39,7 +39,8 @@ static ErrType CheckNeedLoadEustia(IPCInfo* info,
 
 void LoadEustia(IPCInfo* info)
 {
-
+    auto dllName = wstring(GlobalVars::ModulePath) + L'/' + info->eustiaDllName;
+    LoadLibrary(dllName.c_str());
 }
 
 static DWORD WINAPI MainProc(LPVOID _)
@@ -51,13 +52,12 @@ static DWORD WINAPI MainProc(LPVOID _)
     }
     isInited = true;
 
-    auto ipc = MemoryIPC::InitOneIPC(MemoryIPC::InitType::OpenExisting, EUSTIA_COMM_MEMORY_NAME);
+    auto ipc = MemoryIPC::Init(MemoryIPC::InitType::OpenExisting, EUSTIA_COMM_MEMORY_NAME);
     if (!ipc)
     {
         //OutputDebugStringW(L"InitOneIPC Fail");
         return 0;
     }
-
     void* ptr0;
     if (!IsSuccess(ipc->GetMemoryPointer(&ptr0)))
     {
@@ -65,32 +65,25 @@ static DWORD WINAPI MainProc(LPVOID _)
         ipc->Dispose();
         return 0;
     }
+    GlobalVars::IpcInfo = *(IPCInfo*)ptr0;
+    ipc->Dispose();
 
-    auto ipcInfo = (IPCInfo*)ptr0;
     bool isLoadImmediately;
     bool isNeedSelfUnload;
-    auto ret = CheckNeedLoadEustia(ipcInfo, &isLoadImmediately, &isNeedSelfUnload, &g_NeedDelayCheck);
+    auto ret = CheckNeedLoadEustia(&GlobalVars::IpcInfo, &isLoadImmediately, &isNeedSelfUnload, &GlobalVars::NeedDelayCheck);
     if (!IsSuccess(ret))
     {
         return 0;
     }
-
     if (isLoadImmediately)
     {
-        LoadEustia(ipcInfo);
+        LoadEustia(&GlobalVars::IpcInfo);
     }
-
-    if (g_NeedDelayCheck)
-    {
-        g_CheckProcessId = ipcInfo->destProcessId;
-    }
-
     if (isNeedSelfUnload)
     {
-
+        FreeLibraryAndExitThread((HMODULE)GlobalVars::DllHandle, 0);
     }
 
-    ipc->Dispose();
     return 0;
 }
 
@@ -100,8 +93,13 @@ int WINAPI DllMain(_In_ void* _DllHandle, _In_ unsigned long _Reason, _In_opt_ v
     switch (_Reason)
     {
     case DLL_PROCESS_ATTACH:
-        g_DllHandle = _DllHandle;
-        CreateThread(0, 0, MainProc, 0, 0, 0);
+        GlobalVars::DllHandle = _DllHandle;
+        GlobalVars::ModulePath = GetModulePath((HMODULE)_DllHandle);
+        CloseHandle(CreateThread(0, 0, MainProc, 0, 0, 0));
+        break;
+    case DLL_PROCESS_DETACH:
+        delete[] GlobalVars::ModulePath;
+        GlobalVars::ModulePath = nullptr;
         break;
     default:
         break;

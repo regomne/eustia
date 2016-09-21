@@ -9,7 +9,7 @@ using namespace std;
 namespace Eustia
 {
 
-MemoryIPC* MemoryIPC::InitOneIPC(InitType type, const char* ipcName)
+MemoryIPC* MemoryIPC::Init(InitType type, const char* ipcName)
 {
     auto ipc = new MemoryIPC();
     auto ret = ipc->Init(type, ipcName);
