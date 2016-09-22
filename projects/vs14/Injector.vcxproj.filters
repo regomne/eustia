@@ -19,6 +19,9 @@
     <Filter Include="3rdparty\cmdline">
       <UniqueIdentifier>{37d8eb2d-4a5f-4313-b464-026794e0b4ef}</UniqueIdentifier>
     </Filter>
+    <Filter Include="3rdparty\LLVM">
+      <UniqueIdentifier>{4b6b1928-f3b1-4a13-ac8d-d6cf2c9981cb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\Injector\injector.cpp">
@@ -44,6 +47,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\log.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\3rdParty\LLVM\ConvertUTF8.cpp">
+      <Filter>3rdparty\LLVM</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -73,6 +79,9 @@
     </ClInclude>
     <ClInclude Include="..\..\3rdParty\cmdline\cmdline.h">
       <Filter>3rdparty\cmdline</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\3rdParty\LLVM\ConvertUTF8.h">
+      <Filter>3rdparty\LLVM</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

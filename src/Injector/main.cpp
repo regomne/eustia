@@ -1,10 +1,12 @@
 #include <windows.h>
 #include <string>
+
 #include "src/common.h"
 #include "src/log.h"
 #include "src/utils.h"
 #include "src/Injector/injector.h"
 #include "src/Injector/globalvars_i.h"
+#include "3rdParty/cmdline/cmdline.h"
 
 using namespace std;
 using namespace Eustia;

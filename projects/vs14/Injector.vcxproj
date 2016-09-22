@@ -172,6 +172,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\3rdParty\LLVM\ConvertUTF8.cpp" />
     <ClCompile Include="..\..\src\config.cpp" />
     <ClCompile Include="..\..\src\Injector\globavars_i.cpp" />
     <ClCompile Include="..\..\src\Injector\injector.cpp" />
@@ -183,6 +184,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\3rdParty\cmdline\cmdline.h" />
+    <ClInclude Include="..\..\3rdParty\LLVM\ConvertUTF8.h" />
     <ClInclude Include="..\..\src\build_config.h" />
     <ClInclude Include="..\..\src\common.h" />
     <ClInclude Include="..\..\src\config.h" />
