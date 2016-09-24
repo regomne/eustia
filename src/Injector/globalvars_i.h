@@ -10,6 +10,8 @@ class GlobalVars
 {
 public:
     static Eustia::wchar* ModulePath;
+
+    static bool Init();
 };
 
 }

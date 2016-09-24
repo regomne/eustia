@@ -7,7 +7,7 @@
 namespace Eustia
 {
 
-wchar* GetModulePath(HMODULE mod)
+wchar* GetModulePathWin(HMODULE mod)
 {
     size_t bufferLen = 257;
     wchar* exeName = new wchar[bufferLen];
@@ -37,6 +37,11 @@ wchar* GetModulePath(HMODULE mod)
     }
     *(posPtr + 1) = L'\0';
     return exeName;
+}
+
+wchar* GetThisModulePath()
+{
+    return GetModulePathWin(GetModuleHandle(NULL));
 }
 
 intptr GetProcessIdentifer()

@@ -8,7 +8,8 @@
 namespace Eustia
 {
 
-wchar* GetModulePath(HMODULE mod);
+wchar* GetModulePathWin(HMODULE mod);
+wchar* GetThisModulePath();
 intptr GetProcessIdentifer();
 
 }

@@ -95,7 +95,7 @@ int WINAPI DllMain(_In_ void* _DllHandle, _In_ unsigned long _Reason, _In_opt_ v
     {
     case DLL_PROCESS_ATTACH:
         GlobalVars::DllHandle = _DllHandle;
-        GlobalVars::ModulePath = GetModulePath((HMODULE)_DllHandle);
+        GlobalVars::ModulePath = GetModulePathWin((HMODULE)_DllHandle);
         CloseHandle(CreateThread(0, 0, MainProc, 0, 0, 0));
         break;
     case DLL_PROCESS_DETACH:
