@@ -1,6 +1,7 @@
 #include <windows.h>
 #include <string>
 
+#include "src/log.h"
 #include "src/ipc.h"
 #include "src/utils.h"
 #include "src/HookDll/globalvars_h.h"
@@ -94,6 +95,7 @@ int WINAPI DllMain(_In_ void* _DllHandle, _In_ unsigned long _Reason, _In_opt_ v
     switch (_Reason)
     {
     case DLL_PROCESS_ATTACH:
+        EustiaLogger::Init();
         GlobalVars::DllHandle = _DllHandle;
         GlobalVars::ModulePath = GetModulePathWin((HMODULE)_DllHandle);
         CloseHandle(CreateThread(0, 0, MainProc, 0, 0, 0));
@@ -101,6 +103,7 @@ int WINAPI DllMain(_In_ void* _DllHandle, _In_ unsigned long _Reason, _In_opt_ v
     case DLL_PROCESS_DETACH:
         delete[] GlobalVars::ModulePath;
         GlobalVars::ModulePath = nullptr;
+        EustiaLogger::Get()->Dispose();
         break;
     default:
         break;

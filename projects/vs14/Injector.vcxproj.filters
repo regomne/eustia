@@ -33,9 +33,6 @@
     <ClCompile Include="..\..\src\config.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Injector\globavars_i.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\utils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -50,6 +47,9 @@
     </ClCompile>
     <ClCompile Include="..\..\3rdParty\LLVM\ConvertUTF8.cpp">
       <Filter>3rdparty\LLVM</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Injector\globalvars_i.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

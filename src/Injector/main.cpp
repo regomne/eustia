@@ -7,34 +7,50 @@
 #include "src/Injector/injector.h"
 #include "src/Injector/globalvars_i.h"
 #include "3rdParty/cmdline/cmdline.h"
-#include "3rdParty/LLVM/ConvertUTF8.h"
 
 using namespace std;
 using namespace Eustia;
 using namespace EustiaInjector;
 
-int Main(cmdline::parser& cmds)
+static bool IsCmdOK(cmdline::parser& cmds)
+{
+    auto cmdType = cmds.get<string>("type");
+    if ((cmdType == "start" && cmds.get<string>("file") == "") ||
+        (cmdType == "open" && cmds.get<int>("pid") == 0) ||
+        (cmdType == "hook" && (cmds.get<int>("pid") == 0 || cmds.get<string>("hook-type") == "")))
+    {
+        return false;
+    }
+    return true;
+}
+
+static int Main(cmdline::parser& cmds)
 {
     cmds;
-    if (!GlobalVars::Init())
+    GlobalVars::ModulePath = GetThisModulePath();
+    if (!GlobalVars::ModulePath)
     {
-        return -1;
+        printf("Can't get module path.");
+        return 0;
     }
-    auto logPath = wstring(GlobalVars::ModulePath) + L"injector.log";
-    EustiaLogger::GetLogger()->SetLogFileName(logPath.c_str());
-    EustiaLogger::GetLogger()->SetCurrentLogLevel(EustiaLogger::LogLevelInfo);
+    EustiaLogger::Init();
+    EustiaLogger::Get()->SetLogPosition(EustiaLogger::LogPosStderr);
+    EustiaLogger::Get()->SetLogLevel(EustiaLogger::LogLevelInfo);
 
+    EustiaLogger::Get()->Dispose();
     return 0;
 }
 
 int main(int argc, char* argv[])
 {
     cmdline::parser cmd;
-    cmd.add<string>("type", 't', "inject type", true, "",
+    cmd.add<string>("type", 't', "inject type (start, open or hook)", true, "",
         cmdline::oneof<string>("start", "open", "hook"));
     cmd.add<string>("file", 'f', "path of executable file (when start)", false, "");
     cmd.add<int>("pid", 'p', "process id (when open)", false, 0);
     cmd.add<string>("injectee", 'i', "path of injectee, dll or so", true, "");
+    cmd.add<string>("hook-type", 'h', "Windows hook type (when hook)", false, "",
+        cmdline::oneof<string>("keyboard", "msg", "callback"));
     cmd.add("no-eustia", '\0', "only inject the module");
 
 #ifdef _WINDOWS
@@ -57,7 +73,17 @@ int main(int argc, char* argv[])
         printf("example: //todo\n");
         return 0;
     }
+    if (cmds.get<string>("type") == "hook")
+    {
+        printf("hook type only supported on Windows!\n");
+        return 0;
+    }
 #endif
+    if (!IsCmdOK(cmd))
+    {
+        printf("some arguments not correct. Please read the doc.\n");
+        return 0;
+    }
     return Main(cmd);
 }
 
