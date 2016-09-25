@@ -184,6 +184,7 @@
     <ClCompile Include="..\..\src\ipc.cpp" />
     <ClCompile Include="..\..\src\ipc_win.cpp" />
     <ClCompile Include="..\..\src\log.cpp" />
+    <ClCompile Include="..\..\src\unicode_support.cpp" />
     <ClCompile Include="..\..\src\utils.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -196,6 +197,7 @@
     <ClInclude Include="..\..\src\Injector\injector.h" />
     <ClInclude Include="..\..\src\ipc.h" />
     <ClInclude Include="..\..\src\log.h" />
+    <ClInclude Include="..\..\src\unicode_support.h" />
     <ClInclude Include="..\..\src\utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

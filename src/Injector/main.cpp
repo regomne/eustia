@@ -26,7 +26,6 @@ static bool IsCmdOK(cmdline::parser& cmds)
 
 static int Main(cmdline::parser& cmds)
 {
-    cmds;
     GlobalVars::ModulePath = GetThisModulePath();
     if (!GlobalVars::ModulePath)
     {
@@ -36,6 +35,19 @@ static int Main(cmdline::parser& cmds)
     EustiaLogger::Init();
     EustiaLogger::Get()->SetLogPosition(EustiaLogger::LogPosStderr);
     EustiaLogger::Get()->SetLogLevel(EustiaLogger::LogLevelInfo);
+
+    auto injectType = cmds.get<string>("type");
+    if (injectType == "start")
+    {
+        
+    }
+    else if (injectType == "open")
+    {
+    }
+    else if (injectType == "hook")
+    {
+
+    }
 
     EustiaLogger::Get()->Dispose();
     return 0;
