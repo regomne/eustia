@@ -20,8 +20,20 @@ public:
         LogLevelDebug,
     };
 
+    enum LogPosition
+    {
+        LogPosFile,
+        LogPosStderr,
+        LogPosDebugPort,
+    };
+
 public:
-    static EustiaLogger* GetLogger();
+    static void Init();
+    static EustiaLogger* Get()
+    {
+        return instance_;
+    }
+    void Dispose();
     static const char* AnsiStr(const wchar* str);
 
     void SetLogFileName(const char* logFileName)
@@ -33,9 +45,13 @@ public:
         }
     }
     void SetLogFileName(const wchar* logFileName);
-    void SetCurrentLogLevel(LogLevel level)
+    void SetLogLevel(LogLevel level)
     {
-        currentLevel_ = level;
+        logLevel_ = level;
+    }
+    void SetLogPosition(LogPosition pos)
+    {
+        logPosition_ = pos;
     }
 
     void WriteLog(const char* fileName, int lineNum, LogLevel level, const char* format, ...);
@@ -45,7 +61,12 @@ private:
     EustiaLogger();
     ~EustiaLogger();
 
-    inline const char* GetLogLevelString(LogLevel level)
+    void WriteLogToFile(const char* fileName, int lineNum, LogLevel level, const char* format, va_list lst);
+    void WriteLogToFile(LogLevel level, const char* format, va_list lst);
+    void WriteLogToStderr(LogLevel level, const char* format, va_list lst);
+    void WriteLogToDebugPort(LogLevel level, const char* format, va_list lst);
+
+    inline const char* GetLogLevelString(LogLevel level) const
     {
         switch (level)
         {
@@ -59,15 +80,16 @@ private:
         return "UNK  ";
     }
 
-    inline bool IsNeedLog(LogLevel level)
+    inline bool IsNeedLog(LogLevel level) const
     {
-        return currentLevel_ >= level;
+        return logLevel_ >= level;
     }
 
 private:
     static EustiaLogger* instance_;
     std::string logFileName_;
-    LogLevel currentLevel_;
+    LogLevel logLevel_;
+    LogPosition logPosition_;
 };
 
 #ifdef BUILDCONFIG_LOG_WITH_FILENAME
@@ -76,11 +98,11 @@ private:
 #define FILENAME_PARAMETERS_IMPL
 #endif
 
-#define LOGERROR(format,...) Eustia::EustiaLogger::GetLogger()->\
+#define LOGERROR(format,...) Eustia::EustiaLogger::Get()->\
     WriteLog(FILENAME_PARAMETERS_IMPL Eustia::EustiaLogger::LogLevelError, format, __VA_ARGS__)
-#define LOGINFO(format,...) Eustia::EustiaLogger::GetLogger()->\
+#define LOGINFO(format,...) Eustia::EustiaLogger::Get()->\
     WriteLog(FILENAME_PARAMETERS_IMPL Eustia::EustiaLogger::LogLevelInfo, format, __VA_ARGS__)
-#define LOGDEBUG(format,...) Eustia::EustiaLogger::GetLogger()->\
+#define LOGDEBUG(format,...) Eustia::EustiaLogger::Get()->\
     WriteLog(FILENAME_PARAMETERS_IMPL Eustia::EustiaLogger::LogLevelDebug, format, __VA_ARGS__)
 
 #define LOGASTR(str) Eustia::EustiaLogger::AnsiStr(str)
