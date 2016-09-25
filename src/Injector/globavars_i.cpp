@@ -6,10 +6,3 @@ using namespace Eustia;
 using namespace EustiaInjector;
 
 wchar* GlobalVars::ModulePath = nullptr;
-
-bool GlobalVars::Init()
-{
-    GlobalVars::ModulePath = GetThisModulePath();
-
-    return true;
-}
