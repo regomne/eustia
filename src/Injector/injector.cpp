@@ -66,16 +66,16 @@ __declspec(naked) void LoadLib()
     }
 }
 
-u32 GetLoadLibLength(intptr* jmpPos)
+uint32_t GetLoadLibLength(intptr_t* jmpPos)
 {
     //assume length of Loadlib() less than 0x50 bytes
-    for (auto p = (u8*)LoadLib;p < (u8*)LoadLib + 0x50;p++)
+    for (auto p = (uint8_t*)LoadLib;p < (uint8_t*)LoadLib + 0x50;p++)
     {
         //search mov eax,0xffffffff
-        if (*p == 0xb8 && *(u32*)(p + 1) == 0xffffffff)
+        if (*p == 0xb8 && *(uint32_t*)(p + 1) == 0xffffffff)
         {
-            *jmpPos = (intptr)(p - (u8*)LoadLib);
-            return p + 5 - (u8*)LoadLib;
+            *jmpPos = (intptr_t)(p - (uint8_t*)LoadLib);
+            return p + 5 - (uint8_t*)LoadLib;
         }
     }
     //never go to here.
@@ -89,17 +89,17 @@ u32 GetLoadLibLength(intptr* jmpPos)
 // pad bytes
 // dllNameString
 
-bool InjectStartingProcess(HANDLE hp, HANDLE ht, const wchar* dllPath)
+bool InjectStartingProcess(HANDLE hp, HANDLE ht, const wchar_t* dllPath)
 {
     ProcInfo procInfo;
-    intptr jmpPos;
+    intptr_t jmpPos;
     auto loadLibLength = GetLoadLibLength(&jmpPos);
     auto dllPathLength = wcslen(dllPath);
     auto loadLibStartOffset = sizeof(procInfo);
     auto dllPathStartOffset = loadLibStartOffset + loadLibLength;
     //align to 4 bytes
     dllPathStartOffset = (dllPathStartOffset & 3) ? ((dllPathStartOffset & ~3) + 4) : dllPathStartOffset;
-    auto codeBuffer = (u8*)VirtualAllocEx(
+    auto codeBuffer = (uint8_t*)VirtualAllocEx(
         hp,
         0,
         dllPathStartOffset + dllPathLength * sizeof(WCHAR),
@@ -126,15 +126,15 @@ bool InjectStartingProcess(HANDLE hp, HANDLE ht, const wchar* dllPath)
         VirtualFreeEx(hp, codeBuffer, 0, MEM_RELEASE);
         return false;
     }
-    u8 jmpGates[5] = { 0xe9,0,0,0,0 };
-    *(u32*)&jmpGates[1] = ctt.Eip - (u32)(codeBuffer + loadLibStartOffset + jmpPos + 5);
+    uint8_t jmpGates[5] = { 0xe9,0,0,0,0 };
+    *(uint32_t*)&jmpGates[1] = ctt.Eip - (uint32_t)(codeBuffer + loadLibStartOffset + jmpPos + 5);
 
     SIZE_T bytesWrote = 0;
     bool wroteSuccess = true;
     wroteSuccess = wroteSuccess && WriteProcessMemory(hp, codeBuffer, &procInfo, sizeof(procInfo), &bytesWrote);
     wroteSuccess = wroteSuccess && WriteProcessMemory(hp, codeBuffer + loadLibStartOffset, &LoadLib, jmpPos, &bytesWrote);
     wroteSuccess = wroteSuccess && WriteProcessMemory(hp, codeBuffer + loadLibStartOffset + jmpPos, jmpGates, 5, &bytesWrote);
-    wroteSuccess = wroteSuccess && WriteProcessMemory(hp, codeBuffer + dllPathStartOffset, dllPath, dllPathLength * sizeof(wchar), &bytesWrote);
+    wroteSuccess = wroteSuccess && WriteProcessMemory(hp, codeBuffer + dllPathStartOffset, dllPath, dllPathLength * sizeof(wchar_t), &bytesWrote);
 
     if (!wroteSuccess)
     {
@@ -155,7 +155,7 @@ bool InjectStartingProcess(HANDLE hp, HANDLE ht, const wchar* dllPath)
 }
 
 //inject dll when process is to start
-bool create_and_inject(wchar* appName, const wchar* dllPath)
+bool create_and_inject(wchar_t* appName, const wchar_t* dllPath)
 {
     PROCESS_INFORMATION pi;
     STARTUPINFO si;
@@ -228,14 +228,14 @@ static DWORD WINAPI RemoteThreadProc(LPVOID param)
     return 0;
 }
 
-bool InjectRunningProcess(HANDLE hp, const wchar* dllName)
+bool InjectRunningProcess(HANDLE hp, const wchar_t* dllName)
 {
     ProcInfo procInfo;
     auto dllPathLength = wcslen(dllName);
     auto remoteThreadStartOffset = sizeof(procInfo);
     auto dllPathStartOffset = remoteThreadStartOffset + LenOfRemoteThreadProc;
     dllPathStartOffset = (dllPathStartOffset & 3) ? ((dllPathStartOffset & ~3) + 4) : dllPathStartOffset;
-    auto codeBuffer = (u8*)VirtualAllocEx(
+    auto codeBuffer = (uint8_t*)VirtualAllocEx(
         hp,
         0,
         dllPathStartOffset + dllPathLength * sizeof(WCHAR),
@@ -256,7 +256,7 @@ bool InjectRunningProcess(HANDLE hp, const wchar* dllName)
     bool wroteSuccess = true;
     wroteSuccess = wroteSuccess && WriteProcessMemory(hp, codeBuffer, &procInfo, sizeof(procInfo), &bytesWrote);
     wroteSuccess = wroteSuccess && WriteProcessMemory(hp, codeBuffer + remoteThreadStartOffset, &RemoteThreadProc, LenOfRemoteThreadProc, &bytesWrote);
-    wroteSuccess = wroteSuccess && WriteProcessMemory(hp, codeBuffer + dllPathStartOffset, dllName, dllPathLength * sizeof(wchar), &bytesWrote);
+    wroteSuccess = wroteSuccess && WriteProcessMemory(hp, codeBuffer + dllPathStartOffset, dllName, dllPathLength * sizeof(wchar_t), &bytesWrote);
     if (!wroteSuccess)
     {
         LOGERROR("Write process memory fail.");
@@ -278,7 +278,7 @@ bool InjectRunningProcess(HANDLE hp, const wchar* dllName)
     return true;
 }
 
-bool open_and_inject_process(u32 pid, const wchar* dllName)
+bool open_and_inject_process(uint32_t pid, const wchar_t* dllName)
 {
     auto process = OpenProcess(PROCESS_ALL_ACCESS, FALSE, pid);
     if (process == nullptr)

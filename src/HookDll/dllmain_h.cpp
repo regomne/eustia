@@ -20,7 +20,7 @@ static ErrType CheckNeedLoadEustia(const IPCInfo* info,
     switch (info->inject_type)
     {
     case InjectType::HookAuto:
-        if ((intptr)GetCurrentProcessId() == info->dest_process_id)
+        if ((intptr_t)GetCurrentProcessId() == info->dest_process_id)
         {
             *isLoadImmediately = true;
         }

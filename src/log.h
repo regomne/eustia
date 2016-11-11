@@ -34,7 +34,7 @@ public:
         return instance_;
     }
     void dispose();
-    static const char* ansi_str(const wchar* str);
+    static const char* ansi_str(const wchar_t* str);
 
     void set_log_file_name(const char* logFileName)
     {
@@ -44,7 +44,7 @@ public:
             log_file_name_ = logFileName;
         }
     }
-    void set_log_file_name(const wchar* logFileName);
+    void set_log_file_name(const wchar_t* logFileName);
     void set_log_level(LogLevel level)
     {
         log_level_ = level;

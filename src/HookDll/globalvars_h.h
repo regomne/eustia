@@ -9,10 +9,10 @@
 class GlobalVars
 {
 public:
-    static eustia::wchar* ModulePath;
+    static wchar_t* ModulePath;
     static HANDLE DllHandle;
     static bool NeedDelayCheck;
-    static eustia::intptr CheckProcessId;
+    static intptr_t CheckProcessId;
     static eustia::IPCInfo IpcInfo;
 };
 

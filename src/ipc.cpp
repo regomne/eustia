@@ -9,13 +9,13 @@ using namespace std;
 namespace eustia
 {
 
-MemoryIPC* MemoryIPC::init(InitType type, const char* ipcName)
+MemoryIPC* MemoryIPC::init(InitType type, const std::string& ipcName)
 {
     auto ipc = new MemoryIPC();
     auto ret = ipc->init_p(type, ipcName);
     if (!IsSuccess(ret))
     {
-        LOGERROR("Can't init MemoryIPC:%s, err:%d", ipcName, (int)ret);
+        LOGERROR("Can't init MemoryIPC:%s, err:%d", ipcName.c_str(), (int)ret);
         delete ipc;
         return nullptr;
     }
@@ -57,7 +57,7 @@ void MemoryIPC::dispose()
     delete this;
 }
 
-ErrType MemoryIPC::init_p(InitType type, const char* ipcName)
+ErrType MemoryIPC::init_p(InitType type, const std::string& ipcName)
 {
     string ipcNameBase = ipcName;
     auto ipcMemNameStr = ipcNameBase + "_mem";
@@ -79,7 +79,7 @@ ErrType MemoryIPC::init_p(InitType type, const char* ipcName)
     return ErrType::Fail;
 }
 
-ErrType MemoryIPC::open_new_ipc(const char* ipcMemName)
+ErrType MemoryIPC::open_new_ipc(const std::string& ipcMemName)
 {
     auto ret = IPCHelper::create_shared_memory(ipcMemName, kMemSize, &mem_key_);
     if (!IsSuccess(ret))
@@ -89,7 +89,7 @@ ErrType MemoryIPC::open_new_ipc(const char* ipcMemName)
     return ErrType::Success;
 }
 
-ErrType MemoryIPC::open_existing_ipc(const char* ipcMemName)
+ErrType MemoryIPC::open_existing_ipc(const std::string& ipcMemName)
 {
     auto ret = IPCHelper::open_shared_memory(ipcMemName, &mem_key_);
     if (!IsSuccess(ret))
@@ -99,7 +99,7 @@ ErrType MemoryIPC::open_existing_ipc(const char* ipcMemName)
     return ErrType::Success;
 }
 
-ErrType MemoryIPC::open_ipc(const char* ipcMemName)
+ErrType MemoryIPC::open_ipc(const std::string& ipcMemName)
 {
     auto ret = IPCHelper::open_shared_memory(ipcMemName, &mem_key_);
     if (!IsSuccess(ret))

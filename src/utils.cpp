@@ -7,10 +7,10 @@
 namespace eustia
 {
 
-wchar* get_module_path_win(HMODULE mod)
+wchar_t* get_module_path_win(HMODULE mod)
 {
     size_t bufferLen = 257;
-    wchar* exeName = new wchar[bufferLen];
+    wchar_t* exeName = new wchar_t[bufferLen];
     do 
     {
         auto len = GetModuleFileName(mod, exeName, bufferLen);
@@ -24,7 +24,7 @@ wchar* get_module_path_win(HMODULE mod)
         {
             bufferLen *= 2;
             delete[] exeName;
-            exeName = new wchar[bufferLen];
+            exeName = new wchar_t[bufferLen];
             continue;
         }
     } while (false);
@@ -39,12 +39,12 @@ wchar* get_module_path_win(HMODULE mod)
     return exeName;
 }
 
-wchar* get_this_module_path()
+wchar_t* get_this_module_path()
 {
     return get_module_path_win(GetModuleHandle(NULL));
 }
 
-intptr get_process_identifier()
+intptr_t get_process_identifier()
 {
     return GetCurrentProcessId();
 }

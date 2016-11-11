@@ -167,7 +167,7 @@ void EustiaLogger::write_log_to_debug_port(LogLevel level, const char* format, v
 }
 #endif
 
-const char* EustiaLogger::ansi_str(const wchar* str)
+const char* EustiaLogger::ansi_str(const wchar_t* str)
 {
     static char astr[1000];
     astr[0] = '\0';
@@ -175,7 +175,7 @@ const char* EustiaLogger::ansi_str(const wchar* str)
     return astr;
 }
 
-void EustiaLogger::set_log_file_name(const wchar* logFileName)
+void EustiaLogger::set_log_file_name(const wchar_t* logFileName)
 {
     auto nameLen = WideCharToMultiByte(CP_ACP, 0, logFileName, -1, 0, 0, 0, 0);
     if (nameLen == 0)

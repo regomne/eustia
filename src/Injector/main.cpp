@@ -37,6 +37,7 @@ static int main2(cmdline::parser& cmds)
     if (inject_type == "start")
     {
         auto file = cmds.get<string>("file");
+        auto params = cmds.get<string>("file-param");
 
     }
     else if (inject_type == "open")

@@ -6,9 +6,9 @@
 namespace injector
 {
 
-bool create_and_inject(eustia::wchar* appName, const eustia::wchar* dllName);
+bool create_and_inject(wchar_t* appName, const wchar_t* dllName);
 bool adjust_process_token_privilege();
-bool open_and_inject_process(eustia::u32 pid, const eustia::wchar* dllName);
+bool open_and_inject_process(uint32_t pid, const wchar_t* dllName);
 
 }
 

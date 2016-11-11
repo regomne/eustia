@@ -9,7 +9,7 @@ namespace injector
 class GlobalVars
 {
 public:
-    static eustia::wchar* ModulePath;
+    static wchar_t* ModulePath;
 };
 
 }

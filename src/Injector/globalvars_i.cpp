@@ -5,4 +5,4 @@
 using namespace eustia;
 using namespace injector;
 
-wchar* GlobalVars::ModulePath = nullptr;
+wchar_t* GlobalVars::ModulePath = nullptr;

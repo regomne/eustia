@@ -2,6 +2,7 @@
 #define COMMON_H_
 
 #include "build_config.h"
+#include <stdint.h>
 
 #ifdef _WINDOWS
 #   define eustia_api_export __declspec(dllexport)
@@ -20,27 +21,6 @@
 
 namespace eustia
 {
-
-typedef char i8;
-typedef unsigned char u8;
-typedef short i16;
-typedef unsigned short u16;
-typedef int i32;
-typedef unsigned int u32;
-typedef long long i64;
-typedef unsigned long long u64;
-
-#ifdef __X86
-typedef int intptr;
-#else
-#ifdef __X64
-typedef long long intptr;
-#endif
-#endif
-
-#ifdef _MSC_VER
-typedef wchar_t wchar;
-#endif
 
 enum class ErrType
 {

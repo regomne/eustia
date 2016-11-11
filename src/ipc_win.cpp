@@ -7,9 +7,9 @@
 namespace eustia
 {
 
-ErrType IPCHelper::create_shared_memory(const char* name, u32 size, IPCKey* key)
+ErrType IPCHelper::create_shared_memory(const std::string& name, uint32_t size, IPCKey* key)
 {
-    auto handle = CreateFileMappingA(INVALID_HANDLE_VALUE, nullptr, PAGE_READWRITE, 0, size, name);
+    auto handle = CreateFileMappingA(INVALID_HANDLE_VALUE, nullptr, PAGE_READWRITE, 0, size, name.c_str());
     if (handle == nullptr)
     {
         LOGERROR("CreateFileMappingA failed, err:%d", GetLastError());
@@ -19,9 +19,9 @@ ErrType IPCHelper::create_shared_memory(const char* name, u32 size, IPCKey* key)
     return ErrType::Success;
 }
 
-ErrType IPCHelper::open_shared_memory(const char* name, IPCKey* key)
+ErrType IPCHelper::open_shared_memory(const std::string& name, IPCKey* key)
 {
-    auto handle = OpenFileMappingA(PAGE_READWRITE, FALSE, name);
+    auto handle = OpenFileMappingA(PAGE_READWRITE, FALSE, name.c_str());
     if (handle == nullptr)
     {
         LOGERROR("OpenFileMappingA failed, err:%d", GetLastError());

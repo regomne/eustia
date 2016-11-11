@@ -51,7 +51,7 @@
     <ClCompile Include="..\..\src\Injector\globalvars_i.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\unicode_support.cpp">
+    <ClCompile Include="..\..\src\string_support.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -86,7 +86,7 @@
     <ClInclude Include="..\..\3rdParty\LLVM\ConvertUTF8.h">
       <Filter>3rdparty\LLVM</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\unicode_support.h">
+    <ClInclude Include="..\..\src\string_support.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

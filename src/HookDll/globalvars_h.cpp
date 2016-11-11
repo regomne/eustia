@@ -2,7 +2,7 @@
 
 using namespace eustia;
 
-wchar* GlobalVars::ModulePath;
+wchar_t* GlobalVars::ModulePath;
 HANDLE GlobalVars::DllHandle;
 bool GlobalVars::NeedDelayCheck;
 IPCInfo GlobalVars::IpcInfo;

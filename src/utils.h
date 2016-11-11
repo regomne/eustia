@@ -8,9 +8,9 @@
 namespace eustia
 {
 
-wchar* get_module_path_win(HMODULE mod);
-wchar* get_this_module_path();
-intptr get_process_identifier();
+wchar_t* get_module_path_win(HMODULE mod);
+wchar_t* get_this_module_path();
+intptr_t get_process_identifier();
 
 }
 
