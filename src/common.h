@@ -18,7 +18,7 @@
 
 #define ARRAY_SIZE(arr) (sizeof(arr)/sizeof((arr)[0]))
 
-namespace Eustia
+namespace eustia
 {
 
 typedef char i8;

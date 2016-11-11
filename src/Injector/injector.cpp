@@ -6,10 +6,10 @@
 #include "src/common.h"
 #include "src/log.h"
 
-using namespace Eustia;
+using namespace eustia;
 
 
-namespace EustiaInjector
+namespace injector
 {
 
 typedef struct _UNICODE_STRING {
@@ -155,7 +155,7 @@ bool InjectStartingProcess(HANDLE hp, HANDLE ht, const wchar* dllPath)
 }
 
 //inject dll when process is to start
-bool CreateAndInject(wchar* appName, const wchar* dllPath)
+bool create_and_inject(wchar* appName, const wchar* dllPath)
 {
     PROCESS_INFORMATION pi;
     STARTUPINFO si;
@@ -188,7 +188,7 @@ bool CreateAndInject(wchar* appName, const wchar* dllPath)
 }
 #endif // __X86
 
-bool AdjustProcessTokenPrivilege()
+bool adjust_process_token_privilege()
 {
     HANDLE hToken;
     if (!OpenProcessToken(GetCurrentProcess(), TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY, &hToken))
@@ -219,7 +219,7 @@ bool AdjustProcessTokenPrivilege()
     return true;
 }
 
-//assume this function's length max 200bytes.
+//assume length of this function less than 200bytes.
 static const size_t LenOfRemoteThreadProc = 208;
 static DWORD WINAPI RemoteThreadProc(LPVOID param)
 {
@@ -278,7 +278,7 @@ bool InjectRunningProcess(HANDLE hp, const wchar* dllName)
     return true;
 }
 
-bool OpenAndInjectProcess(u32 pid, const wchar* dllName)
+bool open_and_inject_process(u32 pid, const wchar* dllName)
 {
     auto process = OpenProcess(PROCESS_ALL_ACCESS, FALSE, pid);
     if (process == nullptr)

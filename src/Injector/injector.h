@@ -3,12 +3,12 @@
 
 #include "src/common.h"
 
-namespace EustiaInjector
+namespace injector
 {
 
-bool CreateAndInject(Eustia::wchar* appName, const Eustia::wchar* dllName);
-bool AdjustProcessTokenPrivilege();
-bool OpenAndInjectProcess(Eustia::u32 pid, const Eustia::wchar* dllName);
+bool create_and_inject(eustia::wchar* appName, const eustia::wchar* dllName);
+bool adjust_process_token_privilege();
+bool open_and_inject_process(eustia::u32 pid, const eustia::wchar* dllName);
 
 }
 

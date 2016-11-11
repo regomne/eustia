@@ -3,7 +3,7 @@
 
 #include "log.h"
 
-namespace Eustia
+namespace eustia
 {
 
 class Configs

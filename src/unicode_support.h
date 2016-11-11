@@ -6,7 +6,7 @@
 
 #include "src/common.h"
 
-namespace Eustia
+namespace eustia
 {
 
 std::wstring Utf8ToUtf16(const char* str, u32 len);

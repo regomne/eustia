@@ -1,6 +1,6 @@
 #include "src/HookDll/globalvars_h.h"
 
-using namespace Eustia;
+using namespace eustia;
 
 wchar* GlobalVars::ModulePath;
 HANDLE GlobalVars::DllHandle;

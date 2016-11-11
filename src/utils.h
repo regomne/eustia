@@ -5,12 +5,12 @@
 
 #include "src/common.h"
 
-namespace Eustia
+namespace eustia
 {
 
-wchar* GetModulePathWin(HMODULE mod);
-wchar* GetThisModulePath();
-intptr GetProcessIdentifer();
+wchar* get_module_path_win(HMODULE mod);
+wchar* get_this_module_path();
+intptr get_process_identifier();
 
 }
 

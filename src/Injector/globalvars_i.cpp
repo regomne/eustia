@@ -2,7 +2,7 @@
 
 #include "src/utils.h"
 
-using namespace Eustia;
-using namespace EustiaInjector;
+using namespace eustia;
+using namespace injector;
 
 wchar* GlobalVars::ModulePath = nullptr;

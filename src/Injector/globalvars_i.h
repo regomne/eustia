@@ -3,13 +3,13 @@
 
 #include "src/common.h"
 
-namespace EustiaInjector
+namespace injector
 {
 
 class GlobalVars
 {
 public:
-    static Eustia::wchar* ModulePath;
+    static eustia::wchar* ModulePath;
 };
 
 }

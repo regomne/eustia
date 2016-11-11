@@ -4,10 +4,10 @@
 
 #include "src/log.h"
 
-namespace Eustia
+namespace eustia
 {
 
-wchar* GetModulePathWin(HMODULE mod)
+wchar* get_module_path_win(HMODULE mod)
 {
     size_t bufferLen = 257;
     wchar* exeName = new wchar[bufferLen];
@@ -39,12 +39,12 @@ wchar* GetModulePathWin(HMODULE mod)
     return exeName;
 }
 
-wchar* GetThisModulePath()
+wchar* get_this_module_path()
 {
-    return GetModulePathWin(GetModuleHandle(NULL));
+    return get_module_path_win(GetModuleHandle(NULL));
 }
 
-intptr GetProcessIdentifer()
+intptr get_process_identifier()
 {
     return GetCurrentProcessId();
 }

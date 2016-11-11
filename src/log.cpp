@@ -8,12 +8,12 @@
 
 #include "src/build_config.h"
 
-namespace Eustia
+namespace eustia
 {
 
 EustiaLogger* EustiaLogger::instance_ = nullptr;
 
-void EustiaLogger::Init()
+void EustiaLogger::init()
 {
     if (!instance_)
     {
@@ -23,8 +23,8 @@ void EustiaLogger::Init()
 
 EustiaLogger::EustiaLogger()
 {
-    logLevel_ = LogLevelNothing;
-    logPosition_ = LogPosFile;
+    log_level_ = LogLevelNothing;
+    log_position_ = LogPosFile;
 }
 
 EustiaLogger::~EustiaLogger()
@@ -32,24 +32,24 @@ EustiaLogger::~EustiaLogger()
 
 }
 
-void EustiaLogger::WriteLog(const char* fileName, int lineNum, LogLevel level, const char* format, ...)
+void EustiaLogger::write_log(const char* fileName, int lineNum, LogLevel level, const char* format, ...)
 {
-    if (!IsNeedLog(level))
+    if (!is_need_log(level))
     {
         return;
     }
     va_list valist;
     va_start(valist, format);
-    switch (logPosition_)
+    switch (log_position_)
     {
-    case Eustia::EustiaLogger::LogPosFile:
-        WriteLogToFile(fileName, lineNum, level, format, valist);
+    case eustia::EustiaLogger::LogPosFile:
+        write_log_to_file(fileName, lineNum, level, format, valist);
         break;
-    case Eustia::EustiaLogger::LogPosStderr:
-        WriteLogToStderr(level, format, valist);
+    case eustia::EustiaLogger::LogPosStderr:
+        write_log_to_stderr(level, format, valist);
         break;
-    case Eustia::EustiaLogger::LogPosDebugPort:
-        WriteLogToDebugPort(level, format, valist);
+    case eustia::EustiaLogger::LogPosDebugPort:
+        write_log_to_debug_port(level, format, valist);
         break;
     default:
         break;
@@ -57,24 +57,24 @@ void EustiaLogger::WriteLog(const char* fileName, int lineNum, LogLevel level, c
     return;
 }
 
-void EustiaLogger::WriteLog(LogLevel level, const char* format, ...)
+void EustiaLogger::write_log(LogLevel level, const char* format, ...)
 {
-    if (!IsNeedLog(level))
+    if (!is_need_log(level))
     {
         return;
     }
     va_list valist;
     va_start(valist, format);
-    switch (logPosition_)
+    switch (log_position_)
     {
-    case Eustia::EustiaLogger::LogPosFile:
-        WriteLogToFile(level, format, valist);
+    case eustia::EustiaLogger::LogPosFile:
+        write_log_to_file(level, format, valist);
         break;
-    case Eustia::EustiaLogger::LogPosStderr:
-        WriteLogToStderr(level, format, valist);
+    case eustia::EustiaLogger::LogPosStderr:
+        write_log_to_stderr(level, format, valist);
         break;
-    case Eustia::EustiaLogger::LogPosDebugPort:
-        WriteLogToDebugPort(level, format, valist);
+    case eustia::EustiaLogger::LogPosDebugPort:
+        write_log_to_debug_port(level, format, valist);
         break;
     default:
         break;
@@ -82,9 +82,9 @@ void EustiaLogger::WriteLog(LogLevel level, const char* format, ...)
     return;
 }
 
-void EustiaLogger::WriteLogToFile(const char* fileName, int lineNum, LogLevel level, const char* format, va_list lst)
+void EustiaLogger::write_log_to_file(const char* fileName, int lineNum, LogLevel level, const char* format, va_list lst)
 {
-    auto fp = fopen(logFileName_.c_str(), "ab");
+    auto fp = fopen(log_file_name_.c_str(), "ab");
     if (!fp)
     {
         return;
@@ -104,7 +104,7 @@ void EustiaLogger::WriteLogToFile(const char* fileName, int lineNum, LogLevel le
         localTime->tm_hour,
         localTime->tm_min,
         localTime->tm_sec,
-        GetLogLevelString(level),
+        get_log_level_string(level),
         fileName,
         lineNum);
 
@@ -116,10 +116,10 @@ void EustiaLogger::WriteLogToFile(const char* fileName, int lineNum, LogLevel le
     fclose(fp);
 }
 
-void EustiaLogger::WriteLogToFile(LogLevel level, const char* format, va_list lst)
+void EustiaLogger::write_log_to_file(LogLevel level, const char* format, va_list lst)
 {
 
-    auto fp = fopen(logFileName_.c_str(), "ab");
+    auto fp = fopen(log_file_name_.c_str(), "ab");
     if (!fp)
     {
         return;
@@ -139,7 +139,7 @@ void EustiaLogger::WriteLogToFile(LogLevel level, const char* format, va_list ls
         localTime->tm_hour,
         localTime->tm_min,
         localTime->tm_sec,
-        GetLogLevelString(level));
+        get_log_level_string(level));
 
     auto len2 = vsnprintf(buf + len, sizeof(buf) - len, format, lst);
 
@@ -149,25 +149,25 @@ void EustiaLogger::WriteLogToFile(LogLevel level, const char* format, va_list ls
     fclose(fp);
 }
 
-void EustiaLogger::WriteLogToStderr(LogLevel level, const char* format, va_list lst)
+void EustiaLogger::write_log_to_stderr(LogLevel level, const char* format, va_list lst)
 {
     char buf[1000];
-    auto len = snprintf(buf, sizeof(buf), "%s | ", GetLogLevelString(level));
+    auto len = snprintf(buf, sizeof(buf), "%s | ", get_log_level_string(level));
     vsnprintf(buf + len, sizeof(buf) - len, format, lst);
     fprintf(stderr, "%s\n", buf);
 }
 
 #ifdef _WINDOWS
-void EustiaLogger::WriteLogToDebugPort(LogLevel level, const char* format, va_list lst)
+void EustiaLogger::write_log_to_debug_port(LogLevel level, const char* format, va_list lst)
 {
     char buf[1000];
-    auto len = snprintf(buf, sizeof(buf), "%s | ", GetLogLevelString(level));
+    auto len = snprintf(buf, sizeof(buf), "%s | ", get_log_level_string(level));
     vsnprintf(buf + len, sizeof(buf) - len, format, lst);
     OutputDebugStringA(buf);
 }
 #endif
 
-const char* EustiaLogger::AnsiStr(const wchar* str)
+const char* EustiaLogger::ansi_str(const wchar* str)
 {
     static char astr[1000];
     astr[0] = '\0';
@@ -175,7 +175,7 @@ const char* EustiaLogger::AnsiStr(const wchar* str)
     return astr;
 }
 
-void EustiaLogger::SetLogFileName(const wchar* logFileName)
+void EustiaLogger::set_log_file_name(const wchar* logFileName)
 {
     auto nameLen = WideCharToMultiByte(CP_ACP, 0, logFileName, -1, 0, 0, 0, 0);
     if (nameLen == 0)
@@ -184,10 +184,10 @@ void EustiaLogger::SetLogFileName(const wchar* logFileName)
     }
     auto name = new char[nameLen];
     WideCharToMultiByte(CP_ACP, 0, logFileName, -1, name, nameLen, 0, 0);
-    logFileName_ = name;
+    log_file_name_ = name;
 }
 
-void EustiaLogger::Dispose()
+void EustiaLogger::dispose()
 {
     instance_ = nullptr;
     delete this;

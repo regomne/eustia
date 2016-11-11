@@ -1,6 +1,6 @@
 #include "src/config.h"
 
-namespace Eustia
+namespace eustia
 {
 
 Configs* Configs::instance_ = nullptr;

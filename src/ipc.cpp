@@ -6,13 +6,13 @@
 
 using namespace std;
 
-namespace Eustia
+namespace eustia
 {
 
-MemoryIPC* MemoryIPC::Init(InitType type, const char* ipcName)
+MemoryIPC* MemoryIPC::init(InitType type, const char* ipcName)
 {
     auto ipc = new MemoryIPC();
-    auto ret = ipc->InitP(type, ipcName);
+    auto ret = ipc->init_p(type, ipcName);
     if (!IsSuccess(ret))
     {
         LOGERROR("Can't init MemoryIPC:%s, err:%d", ipcName, (int)ret);
@@ -22,56 +22,56 @@ MemoryIPC* MemoryIPC::Init(InitType type, const char* ipcName)
     return ipc;
 }
 
-ErrType MemoryIPC::GetMemoryPointer(void** ptr)
+ErrType MemoryIPC::get_memory_pointer(void** ptr)
 {
-    if (!memPtr_)
+    if (!mem_ptr_)
     {
-        auto ret = IPCHelper::LockSharedMemory(memKey_, &memPtr_);
+        auto ret = IPCHelper::lock_shared_memory(mem_key_, &mem_ptr_);
         if (!IsSuccess(ret))
         {
             return ret;
         }
     }
-    *ptr = memPtr_;
+    *ptr = mem_ptr_;
     return ErrType::Success;
 }
 
-ErrType MemoryIPC::ReleaseMemoryPointer()
+ErrType MemoryIPC::release_memory_pointer()
 {
     ErrType ret = ErrType::Success;
-    if (memPtr_)
+    if (mem_ptr_)
     {
-        ret = IPCHelper::UnlockSharedMemory(memKey_, memPtr_);
+        ret = IPCHelper::unlock_shared_memory(mem_key_, mem_ptr_);
         if (IsSuccess(ret))
         {
-            memPtr_ = nullptr;
+            mem_ptr_ = nullptr;
         }
     }
     return ret;
 }
 
-void MemoryIPC::Dispose()
+void MemoryIPC::dispose()
 {
-    ReleaseMemoryPointer();
-    IPCHelper::ReleaseSharedMemory(memKey_);
+    release_memory_pointer();
+    IPCHelper::release_shared_memory(mem_key_);
     delete this;
 }
 
-ErrType MemoryIPC::InitP(InitType type, const char* ipcName)
+ErrType MemoryIPC::init_p(InitType type, const char* ipcName)
 {
     string ipcNameBase = ipcName;
     auto ipcMemNameStr = ipcNameBase + "_mem";
     auto ipcMemName = ipcMemNameStr.c_str();
     switch (type)
     {
-    case Eustia::MemoryIPC::InitType::OpenNew:
-        return OpenNewIPC(ipcMemName);
+    case eustia::MemoryIPC::InitType::OpenNew:
+        return open_new_ipc(ipcMemName);
         break;
-    case Eustia::MemoryIPC::InitType::OpenExisting:
-        return OpenExistingIPC(ipcMemName);
+    case eustia::MemoryIPC::InitType::OpenExisting:
+        return open_existing_ipc(ipcMemName);
         break;
-    case Eustia::MemoryIPC::InitType::OpenAlways:
-        return OpenIPC(ipcMemName);
+    case eustia::MemoryIPC::InitType::OpenAlways:
+        return open_ipc(ipcMemName);
         break;
     default:
         break;
@@ -79,9 +79,9 @@ ErrType MemoryIPC::InitP(InitType type, const char* ipcName)
     return ErrType::Fail;
 }
 
-ErrType MemoryIPC::OpenNewIPC(const char* ipcMemName)
+ErrType MemoryIPC::open_new_ipc(const char* ipcMemName)
 {
-    auto ret = IPCHelper::CreateSharedMemory(ipcMemName, kMemSize, &memKey_);
+    auto ret = IPCHelper::create_shared_memory(ipcMemName, kMemSize, &mem_key_);
     if (!IsSuccess(ret))
     {
         return ret;
@@ -89,9 +89,9 @@ ErrType MemoryIPC::OpenNewIPC(const char* ipcMemName)
     return ErrType::Success;
 }
 
-ErrType MemoryIPC::OpenExistingIPC(const char* ipcMemName)
+ErrType MemoryIPC::open_existing_ipc(const char* ipcMemName)
 {
-    auto ret = IPCHelper::OpenSharedMemory(ipcMemName, &memKey_);
+    auto ret = IPCHelper::open_shared_memory(ipcMemName, &mem_key_);
     if (!IsSuccess(ret))
     {
         return ret;
@@ -99,12 +99,12 @@ ErrType MemoryIPC::OpenExistingIPC(const char* ipcMemName)
     return ErrType::Success;
 }
 
-ErrType MemoryIPC::OpenIPC(const char* ipcMemName)
+ErrType MemoryIPC::open_ipc(const char* ipcMemName)
 {
-    auto ret = IPCHelper::OpenSharedMemory(ipcMemName, &memKey_);
+    auto ret = IPCHelper::open_shared_memory(ipcMemName, &mem_key_);
     if (!IsSuccess(ret))
     {
-        ret = IPCHelper::CreateSharedMemory(ipcMemName, kMemSize, &memKey_);
+        ret = IPCHelper::create_shared_memory(ipcMemName, kMemSize, &mem_key_);
         if (!IsSuccess(ret))
         {
             return ret;

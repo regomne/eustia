@@ -6,7 +6,7 @@
 #include "src/build_config.h"
 #include "src/common.h"
 
-namespace Eustia
+namespace eustia
 {
 
 class EustiaLogger
@@ -28,68 +28,69 @@ public:
     };
 
 public:
-    static void Init();
-    static EustiaLogger* Get()
+    static void init();
+    static EustiaLogger* get()
     {
         return instance_;
     }
-    void Dispose();
-    static const char* AnsiStr(const wchar* str);
+    void dispose();
+    static const char* ansi_str(const wchar* str);
 
-    void SetLogFileName(const char* logFileName)
+    void set_log_file_name(const char* logFileName)
     {
         //this function can only be set once.
-        if (logFileName_ == "")
+        if (log_file_name_ == "")
         {
-            logFileName_ = logFileName;
+            log_file_name_ = logFileName;
         }
     }
-    void SetLogFileName(const wchar* logFileName);
-    void SetLogLevel(LogLevel level)
+    void set_log_file_name(const wchar* logFileName);
+    void set_log_level(LogLevel level)
     {
-        logLevel_ = level;
+        log_level_ = level;
     }
-    void SetLogPosition(LogPosition pos)
+    void set_log_position(LogPosition pos)
     {
-        logPosition_ = pos;
+        log_position_ = pos;
     }
 
-    void WriteLog(const char* fileName, int lineNum, LogLevel level, const char* format, ...);
-    void WriteLog(LogLevel level, const char* format, ...);
+    void write_log(const char* fileName, int lineNum, LogLevel level, const char* format, ...);
+    void write_log(LogLevel level, const char* format, ...);
+    void write_to_stdout(const char* format, ...);
 
 private:
     EustiaLogger();
     ~EustiaLogger();
 
-    void WriteLogToFile(const char* fileName, int lineNum, LogLevel level, const char* format, va_list lst);
-    void WriteLogToFile(LogLevel level, const char* format, va_list lst);
-    void WriteLogToStderr(LogLevel level, const char* format, va_list lst);
-    void WriteLogToDebugPort(LogLevel level, const char* format, va_list lst);
+    void write_log_to_file(const char* fileName, int lineNum, LogLevel level, const char* format, va_list lst);
+    void write_log_to_file(LogLevel level, const char* format, va_list lst);
+    void write_log_to_stderr(LogLevel level, const char* format, va_list lst);
+    void write_log_to_debug_port(LogLevel level, const char* format, va_list lst);
 
-    inline const char* GetLogLevelString(LogLevel level) const
+    inline const char* get_log_level_string(LogLevel level) const
     {
         switch (level)
         {
-        case Eustia::EustiaLogger::LogLevelDebug:
+        case eustia::EustiaLogger::LogLevelDebug:
             return "DEBUG";
-        case Eustia::EustiaLogger::LogLevelInfo:
+        case eustia::EustiaLogger::LogLevelInfo:
             return "INFO ";
-        case Eustia::EustiaLogger::LogLevelError:
+        case eustia::EustiaLogger::LogLevelError:
             return "ERROR";
         }
         return "UNK  ";
     }
 
-    inline bool IsNeedLog(LogLevel level) const
+    inline bool is_need_log(LogLevel level) const
     {
-        return logLevel_ >= level;
+        return log_level_ >= level;
     }
 
 private:
     static EustiaLogger* instance_;
-    std::string logFileName_;
-    LogLevel logLevel_;
-    LogPosition logPosition_;
+    std::string log_file_name_;
+    LogLevel log_level_;
+    LogPosition log_position_;
 };
 
 #ifdef BUILDCONFIG_LOG_WITH_FILENAME
@@ -98,14 +99,16 @@ private:
 #define FILENAME_PARAMETERS_IMPL
 #endif
 
-#define LOGERROR(format,...) Eustia::EustiaLogger::Get()->\
-    WriteLog(FILENAME_PARAMETERS_IMPL Eustia::EustiaLogger::LogLevelError, format, __VA_ARGS__)
-#define LOGINFO(format,...) Eustia::EustiaLogger::Get()->\
-    WriteLog(FILENAME_PARAMETERS_IMPL Eustia::EustiaLogger::LogLevelInfo, format, __VA_ARGS__)
-#define LOGDEBUG(format,...) Eustia::EustiaLogger::Get()->\
-    WriteLog(FILENAME_PARAMETERS_IMPL Eustia::EustiaLogger::LogLevelDebug, format, __VA_ARGS__)
+#define LOGERROR(format,...) eustia::EustiaLogger::get()->\
+    write_log(FILENAME_PARAMETERS_IMPL eustia::EustiaLogger::LogLevelError, format, __VA_ARGS__)
+#define LOGINFO(format,...) eustia::EustiaLogger::get()->\
+    write_log(FILENAME_PARAMETERS_IMPL eustia::EustiaLogger::LogLevelInfo, format, __VA_ARGS__)
+#define LOGDEBUG(format,...) eustia::EustiaLogger::get()->\
+    write_log(FILENAME_PARAMETERS_IMPL eustia::EustiaLogger::LogLevelDebug, format, __VA_ARGS__)
+#define OUT_STD(format,...) eustia::EustiaLogger::get()->\
+    write_to_stdout(format, __VA_ARGS__)
 
-#define LOGASTR(str) Eustia::EustiaLogger::AnsiStr(str)
+#define LOGASTR(str) eustia::EustiaLogger::ansi_str(str)
 
 }
 

@@ -4,10 +4,10 @@
 
 #include "src/log.h"
 
-namespace Eustia
+namespace eustia
 {
 
-ErrType IPCHelper::CreateSharedMemory(const char* name, u32 size, IPCKey* key)
+ErrType IPCHelper::create_shared_memory(const char* name, u32 size, IPCKey* key)
 {
     auto handle = CreateFileMappingA(INVALID_HANDLE_VALUE, nullptr, PAGE_READWRITE, 0, size, name);
     if (handle == nullptr)
@@ -19,7 +19,7 @@ ErrType IPCHelper::CreateSharedMemory(const char* name, u32 size, IPCKey* key)
     return ErrType::Success;
 }
 
-ErrType IPCHelper::OpenSharedMemory(const char* name, IPCKey* key)
+ErrType IPCHelper::open_shared_memory(const char* name, IPCKey* key)
 {
     auto handle = OpenFileMappingA(PAGE_READWRITE, FALSE, name);
     if (handle == nullptr)
@@ -31,7 +31,7 @@ ErrType IPCHelper::OpenSharedMemory(const char* name, IPCKey* key)
     return ErrType::Success;
 }
 
-ErrType IPCHelper::LockSharedMemory(IPCKey key, void** memPtr)
+ErrType IPCHelper::lock_shared_memory(IPCKey key, void** memPtr)
 {
     auto handle = (HANDLE)key;
     *memPtr = MapViewOfFile(handle, PAGE_READWRITE, 0, 0, 0);
@@ -43,14 +43,14 @@ ErrType IPCHelper::LockSharedMemory(IPCKey key, void** memPtr)
     return ErrType::Success;
 }
 
-ErrType IPCHelper::UnlockSharedMemory(IPCKey key, void* memPtr)
+ErrType IPCHelper::unlock_shared_memory(IPCKey key, void* memPtr)
 {
     UNREFERENCED_PARAMETER(key);
     UnmapViewOfFile(memPtr);
     return ErrType::Success;
 }
 
-ErrType IPCHelper::ReleaseSharedMemory(IPCKey key)
+ErrType IPCHelper::release_shared_memory(IPCKey key)
 {
     CloseHandle((HANDLE)key);
     return ErrType::Success;

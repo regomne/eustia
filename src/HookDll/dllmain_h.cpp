@@ -7,7 +7,7 @@
 #include "src/HookDll/globalvars_h.h"
 
 using namespace std;
-using namespace Eustia;
+using namespace eustia;
 
 static ErrType CheckNeedLoadEustia(const IPCInfo* info, 
     bool* isLoadImmediately, 
@@ -17,10 +17,10 @@ static ErrType CheckNeedLoadEustia(const IPCInfo* info,
     *isLoadImmediately = false;
     *isNeedSelfUnload = false;
     *isNeedDelayCheck = false;
-    switch (info->injectType)
+    switch (info->inject_type)
     {
     case InjectType::HookAuto:
-        if ((intptr)GetCurrentProcessId() == info->destProcessId)
+        if ((intptr)GetCurrentProcessId() == info->dest_process_id)
         {
             *isLoadImmediately = true;
         }
@@ -40,7 +40,7 @@ static ErrType CheckNeedLoadEustia(const IPCInfo* info,
 
 void LoadEustia(IPCInfo* info)
 {
-    auto dllName = wstring(GlobalVars::ModulePath) + L'/' + info->eustiaDllName;
+    auto dllName = wstring(GlobalVars::ModulePath) + L'/' + info->eusita_dll_name;
     LoadLibrary(dllName.c_str());
 }
 
@@ -54,21 +54,21 @@ static DWORD WINAPI MainProc(LPVOID _)
     }
     isInited = true;
 
-    auto ipc = MemoryIPC::Init(MemoryIPC::InitType::OpenExisting, EUSTIA_COMM_MEMORY_NAME);
+    auto ipc = MemoryIPC::init(MemoryIPC::InitType::OpenExisting, EUSTIA_COMM_MEMORY_NAME);
     if (!ipc)
     {
         //OutputDebugStringW(L"InitOneIPC Fail");
         return 0;
     }
     void* ptr0;
-    if (!IsSuccess(ipc->GetMemoryPointer(&ptr0)))
+    if (!IsSuccess(ipc->get_memory_pointer(&ptr0)))
     {
         //OutputDebugStringW(L"GetMemoryPointer Fail");
-        ipc->Dispose();
+        ipc->dispose();
         return 0;
     }
     GlobalVars::IpcInfo = *(IPCInfo*)ptr0;
-    ipc->Dispose();
+    ipc->dispose();
 
     bool isLoadImmediately;
     bool isNeedSelfUnload;
@@ -95,15 +95,15 @@ int WINAPI DllMain(_In_ void* _DllHandle, _In_ unsigned long _Reason, _In_opt_ v
     switch (_Reason)
     {
     case DLL_PROCESS_ATTACH:
-        EustiaLogger::Init();
+        EustiaLogger::init();
         GlobalVars::DllHandle = _DllHandle;
-        GlobalVars::ModulePath = GetModulePathWin((HMODULE)_DllHandle);
+        GlobalVars::ModulePath = get_module_path_win((HMODULE)_DllHandle);
         CloseHandle(CreateThread(0, 0, MainProc, 0, 0, 0));
         break;
     case DLL_PROCESS_DETACH:
         delete[] GlobalVars::ModulePath;
         GlobalVars::ModulePath = nullptr;
-        EustiaLogger::Get()->Dispose();
+        EustiaLogger::get()->dispose();
         break;
     default:
         break;
