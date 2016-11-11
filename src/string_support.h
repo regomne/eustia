@@ -1,8 +1,7 @@
-#ifndef UNICODE_SUPPORT_H_
-#define UNICODE_SUPPORT_H_
+#ifndef STRING_SUPPORT_H_
+#define STRING_SUPPORT_H_
 
 #include <string>
-#include <string.h>
 
 #include "src/common.h"
 
