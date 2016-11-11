@@ -13,13 +13,13 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="3rdparty">
+    <Filter Include="third_party">
       <UniqueIdentifier>{32b64db5-8c90-4a57-9b04-b1415052076d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="3rdparty\cmdline">
+    <Filter Include="third_party\cmdline">
       <UniqueIdentifier>{37d8eb2d-4a5f-4313-b464-026794e0b4ef}</UniqueIdentifier>
     </Filter>
-    <Filter Include="3rdparty\LLVM">
+    <Filter Include="third_party\LLVM">
       <UniqueIdentifier>{4b6b1928-f3b1-4a13-ac8d-d6cf2c9981cb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -45,8 +45,8 @@
     <ClCompile Include="..\..\src\log.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\3rdParty\LLVM\ConvertUTF8.cpp">
-      <Filter>3rdparty\LLVM</Filter>
+    <ClCompile Include="..\..\third_party\LLVM\ConvertUTF8.cpp">
+      <Filter>third_party\LLVM</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Injector\globalvars_i.cpp">
       <Filter>Source Files</Filter>
@@ -80,11 +80,11 @@
     <ClInclude Include="..\..\src\Injector\globalvars_i.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\3rdParty\cmdline\cmdline.h">
-      <Filter>3rdparty\cmdline</Filter>
+    <ClInclude Include="..\..\third_party\cmdline\cmdline.h">
+      <Filter>third_party\cmdline</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\3rdParty\LLVM\ConvertUTF8.h">
-      <Filter>3rdparty\LLVM</Filter>
+    <ClInclude Include="..\..\third_party\LLVM\ConvertUTF8.h">
+      <Filter>third_party\LLVM</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\string_support.h">
       <Filter>Header Files</Filter>

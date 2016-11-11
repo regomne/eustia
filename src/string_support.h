@@ -62,6 +62,13 @@ inline u8string utf16_to_utf8(const u16string& str)
     return utf16_to_utf8(str.c_str(), str.length());
 }
 
+#ifdef _WINDOWS
+inline u8string wchars_to_utf8(const wchar_t* str)
+{
+    return utf16_to_utf8((const char16_t*)str);
+}
+#endif
+
 }
 
 #endif

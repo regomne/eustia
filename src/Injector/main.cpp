@@ -4,9 +4,10 @@
 #include "src/common.h"
 #include "src/log.h"
 #include "src/utils.h"
+#include "src/string_support.h"
 #include "src/Injector/injector.h"
 #include "src/Injector/globalvars_i.h"
-#include "3rdParty/cmdline/cmdline.h"
+#include "third_party/cmdline/cmdline.h"
 
 using namespace std;
 using namespace eustia;
@@ -78,9 +79,7 @@ int main(int argc, char* argv[])
     UNREFERENCED_PARAMETER(argc);
     UNREFERENCED_PARAMETER(argv);
     auto cmd_string = GetCommandLine();
-    auto cmd_len = WideCharToMultiByte(CP_UTF8, 0, cmd_string, -1, 0, 0, 0, 0);
-    auto cmd_utf8 = new char[cmd_len];
-    WideCharToMultiByte(CP_UTF8, 0, cmd_string, -1, cmd_utf8, cmd_len, 0, 0);
+    auto cmd_utf8 = wchars_to_utf8(cmd_string);
     if (!cmd.parse(cmd_utf8))
     {
         printf("%s\n", cmd.usage().c_str());

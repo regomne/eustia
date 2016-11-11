@@ -84,11 +84,16 @@
     Author: Mark E. Davis, 1994.
     Rev History: Rick McGowan, fixes & updates May 2001.
          Fixes & updates, Sept 2001.
+    Modified by Regomne. 11/11/2016
 
 ------------------------------------------------------------------------ */
 
+
 #ifndef LLVM_SUPPORT_CONVERTUTF_H
 #define LLVM_SUPPORT_CONVERTUTF_H
+
+namespace llvm
+{
 
 /* ---------------------------------------------------------------------
     The following 4 definitions are compiler-specific.
@@ -116,57 +121,53 @@ typedef unsigned char   Boolean; /* 0 or 1 */
 #define UNI_UTF16_BYTE_ORDER_MARK_SWAPPED 0xFFFE
 
 typedef enum {
-  conversionOK,           /* conversion successful */
-  sourceExhausted,        /* partial character in source, but hit end */
-  targetExhausted,        /* insuff. room in target for conversion */
-  sourceIllegal           /* source sequence is illegal/malformed */
+    conversionOK,           /* conversion successful */
+    sourceExhausted,        /* partial character in source, but hit end */
+    targetExhausted,        /* insuff. room in target for conversion */
+    sourceIllegal           /* source sequence is illegal/malformed */
 } ConversionResult;
 
 typedef enum {
-  strictConversion = 0,
-  lenientConversion
+    strictConversion = 0,
+    lenientConversion
 } ConversionFlags;
 
-/* This is for C++ and does no harm in C */
-#ifdef __cplusplus
-extern "C" {
-#endif
 
-ConversionResult ConvertUTF8toUTF16 (
-  const UTF8** sourceStart, const UTF8* sourceEnd,
-  UTF16** targetStart, UTF16* targetEnd, ConversionFlags flags);
+ConversionResult ConvertUTF8toUTF16(
+    const UTF8** sourceStart, const UTF8* sourceEnd,
+    UTF16** targetStart, UTF16* targetEnd, ConversionFlags flags);
 
 /**
  * Convert a partial UTF8 sequence to UTF32.  If the sequence ends in an
  * incomplete code unit sequence, returns \c sourceExhausted.
  */
 ConversionResult ConvertUTF8toUTF32Partial(
-  const UTF8** sourceStart, const UTF8* sourceEnd,
-  UTF32** targetStart, UTF32* targetEnd, ConversionFlags flags);
+    const UTF8** sourceStart, const UTF8* sourceEnd,
+    UTF32** targetStart, UTF32* targetEnd, ConversionFlags flags);
 
 /**
  * Convert a partial UTF8 sequence to UTF32.  If the sequence ends in an
  * incomplete code unit sequence, returns \c sourceIllegal.
  */
 ConversionResult ConvertUTF8toUTF32(
-  const UTF8** sourceStart, const UTF8* sourceEnd,
-  UTF32** targetStart, UTF32* targetEnd, ConversionFlags flags);
+    const UTF8** sourceStart, const UTF8* sourceEnd,
+    UTF32** targetStart, UTF32* targetEnd, ConversionFlags flags);
 
-ConversionResult ConvertUTF16toUTF8 (
-  const UTF16** sourceStart, const UTF16* sourceEnd,
-  UTF8** targetStart, UTF8* targetEnd, ConversionFlags flags);
+ConversionResult ConvertUTF16toUTF8(
+    const UTF16** sourceStart, const UTF16* sourceEnd,
+    UTF8** targetStart, UTF8* targetEnd, ConversionFlags flags);
 
-ConversionResult ConvertUTF32toUTF8 (
-  const UTF32** sourceStart, const UTF32* sourceEnd,
-  UTF8** targetStart, UTF8* targetEnd, ConversionFlags flags);
+ConversionResult ConvertUTF32toUTF8(
+    const UTF32** sourceStart, const UTF32* sourceEnd,
+    UTF8** targetStart, UTF8* targetEnd, ConversionFlags flags);
 
-ConversionResult ConvertUTF16toUTF32 (
-  const UTF16** sourceStart, const UTF16* sourceEnd,
-  UTF32** targetStart, UTF32* targetEnd, ConversionFlags flags);
+ConversionResult ConvertUTF16toUTF32(
+    const UTF16** sourceStart, const UTF16* sourceEnd,
+    UTF32** targetStart, UTF32* targetEnd, ConversionFlags flags);
 
-ConversionResult ConvertUTF32toUTF16 (
-  const UTF32** sourceStart, const UTF32* sourceEnd,
-  UTF16** targetStart, UTF16* targetEnd, ConversionFlags flags);
+ConversionResult ConvertUTF32toUTF16(
+    const UTF32** sourceStart, const UTF32* sourceEnd,
+    UTF16** targetStart, UTF16* targetEnd, ConversionFlags flags);
 
 Boolean isLegalUTF8Sequence(const UTF8 *source, const UTF8 *sourceEnd);
 
@@ -174,125 +175,7 @@ Boolean isLegalUTF8String(const UTF8 **source, const UTF8 *sourceEnd);
 
 unsigned getNumBytesForUTF8(UTF8 firstByte);
 
-#ifdef __cplusplus
 }
-
-/*************************************************************************/
-/* Below are LLVM-specific wrappers of the functions above. */
-
-#include <string>
-#include <cstddef>
-
-namespace llvm {
-template <typename T> class ArrayRef;
-template <typename T> class SmallVectorImpl;
-class StringRef;
-
-/**
- * Convert an UTF8 StringRef to UTF8, UTF16, or UTF32 depending on
- * WideCharWidth. The converted data is written to ResultPtr, which needs to
- * point to at least WideCharWidth * (Source.Size() + 1) bytes. On success,
- * ResultPtr will point one after the end of the copied string. On failure,
- * ResultPtr will not be changed, and ErrorPtr will be set to the location of
- * the first character which could not be converted.
- * \return true on success.
- */
-bool ConvertUTF8toWide(unsigned WideCharWidth, llvm::StringRef Source,
-                       char *&ResultPtr, const UTF8 *&ErrorPtr);
-
-/**
-* Converts a UTF-8 StringRef to a std::wstring.
-* \return true on success.
-*/
-bool ConvertUTF8toWide(llvm::StringRef Source, std::wstring &Result);
-
-/**
-* Converts a UTF-8 C-string to a std::wstring.
-* \return true on success.
-*/
-bool ConvertUTF8toWide(const char *Source, std::wstring &Result);
-
-/**
-* Converts a std::wstring to a UTF-8 encoded std::string.
-* \return true on success.
-*/
-bool convertWideToUTF8(const std::wstring &Source, std::string &Result);
-
-
-/**
- * Convert an Unicode code point to UTF8 sequence.
- *
- * \param Source a Unicode code point.
- * \param [in,out] ResultPtr pointer to the output buffer, needs to be at least
- * \c UNI_MAX_UTF8_BYTES_PER_CODE_POINT bytes.  On success \c ResultPtr is
- * updated one past end of the converted sequence.
- *
- * \returns true on success.
- */
-bool ConvertCodePointToUTF8(unsigned Source, char *&ResultPtr);
-
-/**
- * Convert the first UTF8 sequence in the given source buffer to a UTF32
- * code point.
- *
- * \param [in,out] source A pointer to the source buffer. If the conversion
- * succeeds, this pointer will be updated to point to the byte just past the
- * end of the converted sequence.
- * \param sourceEnd A pointer just past the end of the source buffer.
- * \param [out] target The converted code
- * \param flags Whether the conversion is strict or lenient.
- *
- * \returns conversionOK on success
- *
- * \sa ConvertUTF8toUTF32
- */
-static inline ConversionResult convertUTF8Sequence(const UTF8 **source,
-                                                   const UTF8 *sourceEnd,
-                                                   UTF32 *target,
-                                                   ConversionFlags flags) {
-  if (*source == sourceEnd)
-    return sourceExhausted;
-  unsigned size = getNumBytesForUTF8(**source);
-  if ((ptrdiff_t)size > sourceEnd - *source)
-    return sourceExhausted;
-  return ConvertUTF8toUTF32(source, *source + size, &target, target + 1, flags);
-}
-
-/**
- * Returns true if a blob of text starts with a UTF-16 big or little endian byte
- * order mark.
- */
-bool hasUTF16ByteOrderMark(ArrayRef<char> SrcBytes);
-
-/**
- * Converts a stream of raw bytes assumed to be UTF16 into a UTF8 std::string.
- *
- * \param [in] SrcBytes A buffer of what is assumed to be UTF-16 encoded text.
- * \param [out] Out Converted UTF-8 is stored here on success.
- * \returns true on success
- */
-bool convertUTF16ToUTF8String(ArrayRef<char> SrcBytes, std::string &Out);
-
-/**
-* Converts a UTF16 string into a UTF8 std::string.
-*
-* \param [in] Src A buffer of UTF-16 encoded text.
-* \param [out] Out Converted UTF-8 is stored here on success.
-* \returns true on success
-*/
-bool convertUTF16ToUTF8String(ArrayRef<UTF16> Src, std::string &Out);
-
-/**
- * Converts a UTF-8 string into a UTF-16 string with native endianness.
- *
- * \returns true on success
- */
-bool convertUTF8ToUTF16String(StringRef SrcUTF8,
-                              SmallVectorImpl<UTF16> &DstUTF16);
-
-} /* end namespace llvm */
-
-#endif
 
 /* --------------------------------------------------------------------- */
 
