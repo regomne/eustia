@@ -19,21 +19,12 @@
     <Filter Include="third_party\cmdline">
       <UniqueIdentifier>{37d8eb2d-4a5f-4313-b464-026794e0b4ef}</UniqueIdentifier>
     </Filter>
-    <Filter Include="third_party\LLVM">
-      <UniqueIdentifier>{4b6b1928-f3b1-4a13-ac8d-d6cf2c9981cb}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\Injector\injector.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Injector\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\config.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\utils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\ipc.cpp">
@@ -45,13 +36,16 @@
     <ClCompile Include="..\..\src\log.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\third_party\LLVM\ConvertUTF8.cpp">
-      <Filter>third_party\LLVM</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Injector\globalvars_i.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\string_support.cpp">
+    <ClCompile Include="..\..\src\Injector\injector_win.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\localization.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\utils_win.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -83,10 +77,7 @@
     <ClInclude Include="..\..\third_party\cmdline\cmdline.h">
       <Filter>third_party\cmdline</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\third_party\LLVM\ConvertUTF8.h">
-      <Filter>third_party\LLVM</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\string_support.h">
+    <ClInclude Include="..\..\src\localization.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

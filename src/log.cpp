@@ -1,12 +1,16 @@
 #include "src/log.h"
 
-#include <stdio.h>
-#include <wtypes.h>
-#include <time.h>
+#include <cstdio>
+#include <ctime>
+#include <cstdarg>
 
+#ifdef _WINDOWS
 #include <windows.h>
+#endif
 
 #include "src/build_config.h"
+
+using namespace std;
 
 namespace eustia
 {
@@ -172,6 +176,7 @@ const char* EustiaLogger::ansi_str(const wchar_t* str)
     static char astr[1000];
     astr[0] = '\0';
     WideCharToMultiByte(CP_UTF8, 0, str, -1, astr, sizeof(astr), 0, 0);
+    
     return astr;
 }
 

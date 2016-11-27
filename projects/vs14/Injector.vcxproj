@@ -175,20 +175,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\third_party\LLVM\ConvertUTF8.cpp" />
+    <ClCompile Include="..\..\src\Injector\injector_win.cpp" />
     <ClCompile Include="..\..\src\config.cpp" />
     <ClCompile Include="..\..\src\Injector\globalvars_i.cpp" />
-    <ClCompile Include="..\..\src\Injector\injector.cpp" />
     <ClCompile Include="..\..\src\Injector\main.cpp" />
     <ClCompile Include="..\..\src\ipc.cpp" />
     <ClCompile Include="..\..\src\ipc_win.cpp" />
     <ClCompile Include="..\..\src\log.cpp" />
-    <ClCompile Include="..\..\src\string_support.cpp" />
-    <ClCompile Include="..\..\src\utils.cpp" />
+    <ClCompile Include="..\..\src\localization.cpp" />
+    <ClCompile Include="..\..\src\utils_win.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\third_party\cmdline\cmdline.h" />
-    <ClInclude Include="..\..\third_party\LLVM\ConvertUTF8.h" />
     <ClInclude Include="..\..\src\build_config.h" />
     <ClInclude Include="..\..\src\common.h" />
     <ClInclude Include="..\..\src\config.h" />
@@ -196,7 +194,7 @@
     <ClInclude Include="..\..\src\Injector\injector.h" />
     <ClInclude Include="..\..\src\ipc.h" />
     <ClInclude Include="..\..\src\log.h" />
-    <ClInclude Include="..\..\src\string_support.h" />
+    <ClInclude Include="..\..\src\localization.h" />
     <ClInclude Include="..\..\src\utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

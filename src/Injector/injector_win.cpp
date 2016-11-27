@@ -5,6 +5,7 @@
 
 #include "src/common.h"
 #include "src/log.h"
+#include "src/string_support.h"
 
 using namespace eustia;
 
@@ -155,28 +156,32 @@ bool InjectStartingProcess(HANDLE hp, HANDLE ht, const wchar_t* dllPath)
 }
 
 //inject dll when process is to start
-bool create_and_inject(wchar_t* appName, const wchar_t* dllPath)
+bool create_and_inject(const std::string& app_path, const std::string& params, const std::string& mod_path)
 {
+    auto u16_app_path = utf8_to_utf16(app_path);
+    auto u16_params = utf8_to_utf16(params);
+    auto u16_mod_path = utf8_to_utf16(mod_path);
+
     PROCESS_INFORMATION pi;
     STARTUPINFO si;
 
     memset(&si, 0, sizeof(si));
     si.cb = sizeof(si);
 
-    if (GetFileAttributes(appName) == INVALID_FILE_ATTRIBUTES)
+    if (GetFileAttributes(char16p_to_wcharp(u16_app_path.c_str())) == INVALID_FILE_ATTRIBUTES)
     {
-        LOGERROR("Can't find %s", LOGASTR(appName));
+        LOGERROR("Can't find %s", LOGASTR(char16p_to_wcharp(u16_app_path.c_str())));
         return false;
     }
 
-    if (!CreateProcess(0, appName, 0, 0, FALSE, CREATE_SUSPENDED, 0, 0, &si, &pi))
+    if (!CreateProcess(0, app_name, 0, 0, FALSE, CREATE_SUSPENDED, 0, 0, &si, &pi))
     {
         auto err = GetLastError();
-        LOGERROR("Can't create process: %s, error:%d.", LOGASTR(appName), err);
+        LOGERROR("Can't create process: %s, error:%d.", LOGASTR(app_name), err);
         return false;
     }
 
-    if (!InjectStartingProcess(pi.hProcess, pi.hThread, dllPath))
+    if (!InjectStartingProcess(pi.hProcess, pi.hThread, mod_name))
     {
         TerminateProcess(pi.hProcess, 0);
         return false;
