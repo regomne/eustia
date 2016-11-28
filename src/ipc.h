@@ -69,7 +69,7 @@ struct IPCInfo
     IPAddrType ip_addr_type;
     uint8_t host_ip[16]; //always 127.0.0.1
     uint16_t host_port; //host port to connect, little endian
-    wchar_t eusita_dll_name[MAX_NAME_LEN_OF_EUSTIA_DLL]; //end with zero
+    char eusita_dll_name[MAX_NAME_LEN_OF_EUSTIA_DLL]; //end with zero
     union
     {
         uint32_t key_to_wait; //if type is keyboard hook

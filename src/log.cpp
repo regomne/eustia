@@ -17,14 +17,6 @@ namespace eustia
 
 EustiaLogger* EustiaLogger::instance_ = nullptr;
 
-void EustiaLogger::init()
-{
-    if (!instance_)
-    {
-        instance_ = new EustiaLogger();
-    }
-}
-
 EustiaLogger::EustiaLogger()
 {
     log_level_ = LogLevelNothing;

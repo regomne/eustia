@@ -4,7 +4,7 @@
 #include "src/common.h"
 #include "src/log.h"
 #include "src/utils.h"
-#include "src/string_support.h"
+#include "src/localization.h"
 #include "src/Injector/injector.h"
 #include "src/Injector/globalvars_i.h"
 #include "third_party/cmdline/cmdline.h"
@@ -27,22 +27,41 @@ static bool is_cmd_ok(cmdline::parser& cmds)
 
 static int main2(cmdline::parser& cmds)
 {
-    GlobalVars::ModulePath = get_this_module_path();
-    if (!GlobalVars::ModulePath)
+    auto mod_path = get_this_module_path();
+    if (mod_path == "")
     {
-        printf("Can't get module path.");
+        printf("Can't get module path.\n");
         return 0;
     }
+    GlobalVars::get()->module_path = mod_path;
 
     auto inject_type = cmds.get<string>("type");
     if (inject_type == "start")
     {
         auto file = cmds.get<string>("file");
         auto params = cmds.get<string>("file-param");
-
+        auto mod = cmds.get<string>("injectee");
+        if (!create_and_inject(file, params, mod))
+        {
+            printf("inject failed\n");
+        }
+        else
+        {
+            printf("inject success.\n");
+        }
     }
     else if (inject_type == "open")
     {
+        auto pid = cmds.get<int>("pid");
+        auto mod = cmds.get<string>("injectee");
+        if (!open_and_inject_process(pid, mod))
+        {
+            printf("open failed.\n");
+        }
+        else
+        {
+            printf("open success.\n");
+        }
     }
     else if (inject_type == "hook")
     {
@@ -69,6 +88,7 @@ void init_cmdline(cmdline::parser& cmd)
 int main(int argc, char* argv[])
 {
     EustiaLogger::init();
+    GlobalVars::init();
     EustiaLogger::get()->set_log_position(EustiaLogger::LogPosStderr);
     EustiaLogger::get()->set_log_level(EustiaLogger::LogLevelInfo);
 

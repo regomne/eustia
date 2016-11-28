@@ -2,6 +2,7 @@
 #include <string>
 
 #include "src/log.h"
+#include "src/localization.h"
 #include "src/ipc.h"
 #include "src/utils.h"
 #include "src/HookDll/globalvars_h.h"
@@ -40,8 +41,8 @@ static ErrType CheckNeedLoadEustia(const IPCInfo* info,
 
 void LoadEustia(IPCInfo* info)
 {
-    auto dllName = wstring(GlobalVars::ModulePath) + L'/' + info->eusita_dll_name;
-    LoadLibrary(dllName.c_str());
+    auto dllName = GlobalVars::get()->module_path + '/' + info->eusita_dll_name;
+    LoadLibrary((wchar_t*)utf8_to_utf16(dllName).c_str());
 }
 
 static DWORD WINAPI MainProc(LPVOID _)
@@ -67,23 +68,24 @@ static DWORD WINAPI MainProc(LPVOID _)
         ipc->dispose();
         return 0;
     }
-    GlobalVars::IpcInfo = *(IPCInfo*)ptr0;
+    auto globals = GlobalVars::get();
+    globals->ipc_info = *(IPCInfo*)ptr0;
     ipc->dispose();
 
     bool isLoadImmediately;
     bool isNeedSelfUnload;
-    auto ret = CheckNeedLoadEustia(&GlobalVars::IpcInfo, &isLoadImmediately, &isNeedSelfUnload, &GlobalVars::NeedDelayCheck);
+    auto ret = CheckNeedLoadEustia(&globals->ipc_info, &isLoadImmediately, &isNeedSelfUnload, &globals->need_delay_check);
     if (!IsSuccess(ret))
     {
         return 0;
     }
     if (isLoadImmediately)
     {
-        LoadEustia(&GlobalVars::IpcInfo);
+        LoadEustia(&globals->ipc_info);
     }
     if (isNeedSelfUnload)
     {
-        FreeLibraryAndExitThread((HMODULE)GlobalVars::DllHandle, 0);
+        FreeLibraryAndExitThread((HMODULE)globals->dll_handle, 0);
     }
 
     return 0;
@@ -96,13 +98,13 @@ int WINAPI DllMain(_In_ void* _DllHandle, _In_ unsigned long _Reason, _In_opt_ v
     {
     case DLL_PROCESS_ATTACH:
         EustiaLogger::init();
-        GlobalVars::DllHandle = _DllHandle;
-        GlobalVars::ModulePath = get_module_path_win((HMODULE)_DllHandle);
+        GlobalVars::init();
+        GlobalVars::get()->dll_handle = _DllHandle;
+        GlobalVars::get()->module_path = get_module_path_win((HMODULE)_DllHandle);
         CloseHandle(CreateThread(0, 0, MainProc, 0, 0, 0));
         break;
     case DLL_PROCESS_DETACH:
-        delete[] GlobalVars::ModulePath;
-        GlobalVars::ModulePath = nullptr;
+        GlobalVars::get()->dispose();
         EustiaLogger::get()->dispose();
         break;
     default:

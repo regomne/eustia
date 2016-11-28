@@ -1,57 +1,24 @@
 #include "src/localization.h"
 
 #include <memory>
+#include <codecvt>
 
 namespace eustia
 {
 
-struct _CheckType
+std::u16string utf8_to_utf16(const std::string& str)
 {
-#define CHAR_SIZE_ERROR "char size error"
-    static_assert(sizeof(char32_t) == sizeof(llvm::UTF32), CHAR_SIZE_ERROR);
-    static_assert(sizeof(char16_t) == sizeof(llvm::UTF16), CHAR_SIZE_ERROR);
-    static_assert(sizeof(char) == sizeof(llvm::UTF8), CHAR_SIZE_ERROR);
-#ifdef _WINDOWS
-    static_assert(sizeof(wchar_t) == sizeof(char16_t), CHAR_SIZE_ERROR);
-#endif
-};
-
-u16string utf8_to_utf16(const char* str, size_t len)
-{
-    auto src_ptr = (const llvm::UTF8*)str;
-    auto buffer_len = len;
-    auto dest = std::unique_ptr<llvm::UTF16[]>(new llvm::UTF16[buffer_len]);
-    auto dest_ptr = dest.get();
-    auto ret = llvm::ConvertUTF8toUTF16(
-        &src_ptr, 
-        src_ptr + len,
-        &dest_ptr,
-        dest_ptr + buffer_len,
-        llvm::lenientConversion);
-    if (ret == llvm::conversionOK)
-    {
-        return u16string((char16_t*)dest.get(), dest_ptr - dest.get());
-    }
-    return u16string(u"cvt error");
+    //todo: the bug of vs2015. will fix under vs2017
+    std::wstring_convert<std::codecvt_utf8_utf16<int16_t>, int16_t> ucconv;
+    auto ustr = ucconv.from_bytes(str);
+    return *reinterpret_cast<std::u16string*>(&ustr);
 }
 
-u8string utf16_to_utf8(const char16_t* str, size_t len)
+std::string utf16_to_utf8(const std::u16string& str)
 {
-    auto src_ptr = (const llvm::UTF16*)str;
-    auto buffer_len = len * 6;
-    auto dest = std::unique_ptr<llvm::UTF8[]>(new llvm::UTF8[buffer_len]);
-    auto dest_ptr = dest.get();
-    auto ret = llvm::ConvertUTF16toUTF8(
-        &src_ptr,
-        src_ptr + len,
-        &dest_ptr,
-        dest_ptr + buffer_len,
-        llvm::lenientConversion);
-    if (ret == llvm::conversionOK)
-    {
-        return u8string((char*)dest.get(), dest_ptr - dest.get());
-    }
-    return u8string("cvt error");
+    std::wstring_convert<std::codecvt_utf8_utf16<int16_t>, int16_t> ucconv;
+    auto p = reinterpret_cast<const int16_t *>(str.data());
+    return ucconv.to_bytes(p, p + str.size());
 }
 
 }

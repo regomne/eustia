@@ -2,7 +2,4 @@
 
 using namespace eustia;
 
-wchar_t* GlobalVars::ModulePath;
-HANDLE GlobalVars::DllHandle;
-bool GlobalVars::NeedDelayCheck;
-IPCInfo GlobalVars::IpcInfo;
+GlobalVars* GlobalVars::instance_ = nullptr;

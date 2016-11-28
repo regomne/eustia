@@ -174,8 +174,9 @@
     <ClCompile Include="..\..\src\HookDll\hookproc.cpp" />
     <ClCompile Include="..\..\src\ipc.cpp" />
     <ClCompile Include="..\..\src\ipc_win.cpp" />
+    <ClCompile Include="..\..\src\localization.cpp" />
     <ClCompile Include="..\..\src\log.cpp" />
-    <ClCompile Include="..\..\src\utils.cpp" />
+    <ClCompile Include="..\..\src\utils_win.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\HookDll\globalvars_h.h" />

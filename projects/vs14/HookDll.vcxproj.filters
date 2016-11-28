@@ -33,7 +33,10 @@
     <ClCompile Include="..\..\src\HookDll\globalvars_h.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\utils.cpp">
+    <ClCompile Include="..\..\src\utils_win.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\localization.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

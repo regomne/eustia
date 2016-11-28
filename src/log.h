@@ -28,7 +28,14 @@ public:
     };
 
 public:
-    static void init();
+    static void init()
+    {
+        if (!instance_)
+        {
+            instance_ = new EustiaLogger();
+        }
+    }
+
     static EustiaLogger* get()
     {
         return instance_;

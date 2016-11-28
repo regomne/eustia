@@ -21,7 +21,7 @@ std::string get_this_module_path();
 
 intptr_t get_process_identifier();
 
-std::FILE* open_file_utf8(const std::string& fname, const char* flags)
+std::FILE* open_file_utf8(const std::string& fname, const char* flags);
 
 }
 

@@ -2,10 +2,11 @@
 
 #include <windows.h>
 #include <assert.h>
+#include <memory>
 
 #include "src/common.h"
 #include "src/log.h"
-#include "src/string_support.h"
+#include "src/localization.h"
 
 using namespace eustia;
 
@@ -168,20 +169,25 @@ bool create_and_inject(const std::string& app_path, const std::string& params, c
     memset(&si, 0, sizeof(si));
     si.cb = sizeof(si);
 
-    if (GetFileAttributes(char16p_to_wcharp(u16_app_path.c_str())) == INVALID_FILE_ATTRIBUTES)
+    if (GetFileAttributes((wchar_t*)u16_app_path.c_str()) == INVALID_FILE_ATTRIBUTES)
     {
-        LOGERROR("Can't find %s", LOGASTR(char16p_to_wcharp(u16_app_path.c_str())));
+        LOGERROR("Can't find %s", LOGASTR((wchar_t*)u16_app_path.c_str()));
         return false;
     }
 
-    if (!CreateProcess(0, app_name, 0, 0, FALSE, CREATE_SUSPENDED, 0, 0, &si, &pi))
+    auto app_with_params = u16_app_path + u' ' + u16_params;
+    auto app_ptr = std::unique_ptr<char16_t[]>(new char16_t[app_with_params.length() + 1]);
+    app_with_params.copy(app_ptr.get(), app_with_params.length(), 0);
+    app_ptr[app_with_params.length()] = u'\0';
+
+    if (!CreateProcess(0, (wchar_t*)app_ptr.get(), 0, 0, FALSE, CREATE_SUSPENDED, 0, 0, &si, &pi))
     {
         auto err = GetLastError();
-        LOGERROR("Can't create process: %s, error:%d.", LOGASTR(app_name), err);
+        LOGERROR("Can't create process: %s, error:%d.", LOGASTR((wchar_t*)app_ptr.get()), err);
         return false;
     }
 
-    if (!InjectStartingProcess(pi.hProcess, pi.hThread, mod_name))
+    if (!InjectStartingProcess(pi.hProcess, pi.hThread, (wchar_t*)u16_mod_path.c_str()))
     {
         TerminateProcess(pi.hProcess, 0);
         return false;
@@ -283,7 +289,7 @@ bool InjectRunningProcess(HANDLE hp, const wchar_t* dllName)
     return true;
 }
 
-bool open_and_inject_process(uint32_t pid, const wchar_t* dllName)
+bool open_and_inject_process(uint32_t pid, const std::string& mod_path)
 {
     auto process = OpenProcess(PROCESS_ALL_ACCESS, FALSE, pid);
     if (process == nullptr)
@@ -291,12 +297,15 @@ bool open_and_inject_process(uint32_t pid, const wchar_t* dllName)
         LOGERROR("Can't open process: %d, err:%d", pid, GetLastError());
         return false;
     }
-    auto result = InjectRunningProcess(process, dllName);
+    auto result = InjectRunningProcess(process, (wchar_t*)utf8_to_utf16(mod_path).c_str());
     CloseHandle(process);
     return result;
 }
 
+bool hook_process_cb(uint32_t pid, const std::string& mod_path)
+{
 
+}
 
 }
 
