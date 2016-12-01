@@ -8,40 +8,41 @@
 namespace eustia
 {
 
-std::u16string utf8_to_utf16(const std::string& str);
 
-inline std::u16string utf8_to_utf16(const char* str, size_t len)
-{
-    return utf8_to_utf16(std::string(str, len));
-}
+std::u16string utf8_to_utf16(const char* str, size_t len);
 
 template<size_t _Size>
 inline std::u16string utf8_to_utf16(const char(&str)[_Size])
 {
-    return utf8_to_utf16(std::string(str, _Size));
+    return utf8_to_utf16(str, _Size);
 }
 
 inline std::u16string utf8_to_utf16(const char* str)
 {
-    return utf8_to_utf16(std::string(str));
+    return utf8_to_utf16(str, std::char_traits<char>::length(str));
 }
 
-std::string utf16_to_utf8(const std::u16string& str);
-
-inline std::string utf16_to_utf8(const char16_t* str, size_t len)
+inline std::u16string utf8_to_utf16(const std::string& str)
 {
-    return utf16_to_utf8(std::u16string(str, len));
+    return utf8_to_utf16(str.c_str(), str.length());
 }
+
+std::string utf16_to_utf8(const char16_t* str, size_t len);
 
 template<size_t _Size>
 inline std::string utf16_to_utf8(const char16_t(&str)[_Size])
 {
-    return utf16_to_utf8(std::u16string(str, _Size));
+    return utf16_to_utf8(str, _Size);
 }
 
 inline std::string utf16_to_utf8(const char16_t* str)
 {
-    return utf16_to_utf8(std::u16string(str));
+    return utf16_to_utf8(str, std::char_traits<char16_t>::length(str));
+}
+
+inline std::string utf16_to_utf8(const std::u16string& str)
+{
+    return utf16_to_utf8(str.c_str(), str.length());
 }
 
 #ifdef _MSC_VER
