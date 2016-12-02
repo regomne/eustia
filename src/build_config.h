@@ -7,7 +7,7 @@
 //name of shared memory
 #define EUSTIA_COMM_MEMORY_NAME "eustia/shared_memory"
 
-//the max length of "eustia.dll"
-#define MAX_NAME_LEN_OF_EUSTIA_DLL 20
+//the max length of path of eustia.dll
+#define MAX_PATH_LEN_OF_DLL_TO_LOAD 1000
 
 #endif

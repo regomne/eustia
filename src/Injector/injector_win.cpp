@@ -302,9 +302,28 @@ bool open_and_inject_process(uint32_t pid, const std::string& mod_path)
     return result;
 }
 
-bool hook_process_cb(uint32_t pid, const std::string& mod_path)
+bool hook_process_cb(uint32_t pid, const std::string& mod_path, const std::string& loader_path)
 {
+    // init IPCInfo
 
+    auto u16_mod_path = utf8_to_utf16(mod_path);
+    auto u16_loader_path = utf8_to_utf16(loader_path);
+    
+    auto loader_mod = LoadLibrary((wchar_t*)loader_path.c_str());
+    if (!loader_mod)
+    {
+        LOGERROR("Can't load loader dll. Error:%d", GetLastError());
+        return false;
+    }
+    auto hook_cb = (HOOKPROC)GetProcAddress(loader_mod, "CallWndProc");
+    if (!hook_cb)
+    {
+        LOGERROR("Can't find %s function in loader dll.", "CallWndProc");
+        FreeLibrary(loader_mod);
+        return false;
+    }
+
+    SetWindowsHookEx(WH_CALLWNDPROC, hook_cb, loader_mod, 0);
 }
 
 }

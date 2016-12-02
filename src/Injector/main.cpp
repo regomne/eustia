@@ -74,12 +74,18 @@ static int main2(cmdline::parser& cmds)
 
 void init_cmdline(cmdline::parser& cmd)
 {
+#ifdef __X86
+#define LOADER_DLL_NAME "loader32.dll"
+#else
+#define LOADER_DLL_NAME "loader64.dll"
+#endif
     cmd.add<string>("type", 't', "inject type (start, open or hook)", true, "",
         cmdline::oneof<string>("start", "open", "hook"));
     cmd.add<string>("file", 'f', "path of executable file (when start)", false, "");
     cmd.add<string>("file-param", '\0', "parameters of executable (when start)", false, "");
     cmd.add<int>("pid", 'p', "process id (when open)", false, 0);
     cmd.add<string>("injectee", 'i', "path of injectee, dll or so", true, "");
+    cmd.add<string>("loader-dll-name", '\0', "name of the loader dll", false, LOADER_DLL_NAME);
     cmd.add<string>("hook-type", 'h', "Windows hook type (when hook)", false, "",
         cmdline::oneof<string>("keyboard", "msg", "callback"));
     cmd.add("no-eustia", '\0', "only inject the module");

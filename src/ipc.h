@@ -1,8 +1,10 @@
 #ifndef IPC_H_
 #define IPC_H_
 
-#include "src/common.h"
 #include <string>
+
+#include "src/common.h"
+#include "src/json_class.h"
 
 namespace eustia
 {
@@ -60,16 +62,32 @@ private:
     void* mem_ptr_;
 };
 
-struct IPCInfo
+class EustiaIPC :public IJsonClass
 {
+public:
+    EustiaIPC() {}
+    bool parse(const std::string& json_str) override;
+    std::string to_string() override;
+
+public:
+    IPAddrType ip_addr_type;
+    uint8_t host_ip[16]; //usually 127.0.0.1
+    uint16_t host_port; //host port to connect, little endian
+};
+
+class LoaderIPC :public IJsonClass
+{
+public:
+    LoaderIPC() {}
+    bool parse(const std::string& json_str) override;
+    std::string to_string() override;
+
+public:
     InjectType inject_type;
     intptr_t host_process_id; //process injector
     intptr_t dest_process_id; //process to inject 
     intptr_t dest_thread_id; //thread to inject
-    IPAddrType ip_addr_type;
-    uint8_t host_ip[16]; //always 127.0.0.1
-    uint16_t host_port; //host port to connect, little endian
-    char eusita_dll_name[MAX_NAME_LEN_OF_EUSTIA_DLL]; //end with zero
+    char eusita_dll_name[MAX_PATH_LEN_OF_DLL_TO_LOAD]; //end with zero
     union
     {
         uint32_t key_to_wait; //if type is keyboard hook

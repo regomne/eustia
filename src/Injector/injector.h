@@ -11,6 +11,8 @@ bool create_and_inject(const std::string& app_path, const std::string& params, c
 
 bool open_and_inject_process(uint32_t pid, const std::string& mod_path);
 
+bool hook_process_cb(uint32_t pid, const std::string& mod_path, const std::string& loader_path);
+
 }
 
 #endif

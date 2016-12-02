@@ -3,8 +3,10 @@
 #include <string>
 
 #include "src/log.h"
+#include "third_party/json/json.hpp"
 
 using namespace std;
+using json = nlohmann::json;
 
 namespace eustia
 {
@@ -111,6 +113,48 @@ ErrType MemoryIPC::open_ipc(const std::string& ipcMemName)
         }
     }
     return ErrType::Success;
+}
+
+//todo return bool
+static void convert_ip_addr(const std::string& ip_str,IPAddrType* ip_type, uint8_t* ip)
+{
+    if (ip_str.find(':') != std::string::npos)
+    {
+        *ip_type = IPAddrType::IPv6;
+        
+    }
+    else
+    {
+        *ip_type = IPAddrType::IPv4;
+        
+    }
+}
+
+bool EustiaIPC::parse(const std::string& json_str)
+{
+    json j;
+    try
+    {
+        j = std::move(json::parse(json_str));
+    }
+    catch (std::exception& e)
+    {
+        LOGERROR("json parse error: %s",e.what());
+        return false;
+    }
+    auto host_ip = j.find("host_ip");
+    auto host_port = j.find("host_port");
+    if (host_ip == j.end() ||
+        host_port == j.end() ||
+        !host_ip->is_string() ||
+        !host_port->is_number_integer())
+    {
+        LOGERROR("json data error!");
+        return false;
+    }
+    convert_ip_addr(std::string(*host_ip), &this->ip_addr_type, this->host_ip);
+    this->host_port = *host_port;
+    return true;
 }
 
 }
