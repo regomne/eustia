@@ -186,6 +186,7 @@
     <ClCompile Include="..\..\src\utils_win.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\src\json_class.h" />
     <ClInclude Include="..\..\third_party\cmdline\cmdline.h" />
     <ClInclude Include="..\..\src\build_config.h" />
     <ClInclude Include="..\..\src\common.h" />
