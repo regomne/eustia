@@ -26,7 +26,7 @@ public:
     
 };
 
-// is not thread-safe
+// not thread-safe
 // 1 process write, other processes read.
 class MemoryIPC
 {

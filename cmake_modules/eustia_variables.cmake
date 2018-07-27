@@ -40,6 +40,7 @@ endif()
 #
 
 if(OS_LINUX)
+  set(OS_SPECIFIC_DIR_NAME "linux")
   # Platform-specific compiler/linker flags.
   list(APPEND EUSTIA_COMPILER_FLAGS
     -fno-strict-aliasing            # Avoid assumptions regarding non-aliasing of objects of different types
@@ -119,6 +120,8 @@ endif()
 #
 
 if(OS_WINDOWS)
+  set(OS_SPECIFIC_DIR_NAME "win")
+
   if (GEN_NINJA)
     # When using the Ninja generator clear the CMake defaults to avoid excessive
     # console warnings (see issue #2120).
