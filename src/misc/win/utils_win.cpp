@@ -1,9 +1,9 @@
-#include "src/utils.h"
+#include "src/misc/utils.h"
 
 #include <windows.h>
 
-#include "src/log.h"
-#include "src/localization.h"
+#include "src/core/log.h"
+#include "src/misc/localization.h"
 
 namespace eustia
 {

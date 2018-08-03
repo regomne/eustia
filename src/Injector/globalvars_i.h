@@ -4,7 +4,7 @@
 #include <string>
 
 #include "src/common.h"
-#include "src/localization.h"
+#include "src/misc/localization.h"
 
 namespace injector
 {

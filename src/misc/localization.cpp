@@ -1,4 +1,4 @@
-#include "src/localization.h"
+#include "src/misc/localization.h"
 
 #include <memory>
 #include <codecvt>
@@ -16,8 +16,8 @@ std::u16string utf8_to_utf16(const char* str, size_t len)
 
 std::string utf16_to_utf8(const char16_t* str, size_t len)
 {
-    std::wstring_convert<std::codecvt_utf8_utf16<int16_t>, int16_t> ucconv;
-    return ucconv.to_bytes((int16_t*)str, (int16_t*)(str + len));
+    std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t> ucconv;
+    return ucconv.to_bytes((char16_t*)str, (char16_t*)(str + len));
 }
 
 }

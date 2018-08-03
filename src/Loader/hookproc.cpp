@@ -1,4 +1,4 @@
-#include "src/HookDll/hookproc.h"
+#include "src/loader/hookproc.h"
 
 LRESULT WINAPI CallWndProc(int code, WPARAM wparam, LPARAM lparam)
 {

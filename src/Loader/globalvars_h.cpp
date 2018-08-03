@@ -1,4 +1,4 @@
-#include "src/HookDll/globalvars_h.h"
+#include "src/loader/globalvars_h.h"
 
 using namespace eustia;
 

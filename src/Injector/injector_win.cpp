@@ -5,8 +5,8 @@
 #include <memory>
 
 #include "src/common.h"
-#include "src/log.h"
-#include "src/localization.h"
+#include "src/core/log.h"
+#include "src/misc/localization.h"
 
 using namespace eustia;
 
@@ -22,6 +22,7 @@ typedef struct _UNICODE_STRING {
 
 extern "C"
 {
+	typedef LONG NTSTATUS;
     NTSYSAPI NTSTATUS NTAPI NtSetContextThread(
         IN HANDLE ThreadHandle,
         IN CONTEXT* Context);
@@ -46,7 +47,7 @@ struct ProcInfo
     UNICODE_STRING dllName;
 };
 
-#ifdef __X86
+#ifdef _X86_
 
 __declspec(naked) void LoadLib()
 {
@@ -197,7 +198,7 @@ bool create_and_inject(const std::string& app_path, const std::string& params, c
 
     return true;
 }
-#endif // __X86
+#endif // _X86_
 
 bool adjust_process_token_privilege()
 {
@@ -305,7 +306,7 @@ bool open_and_inject_process(uint32_t pid, const std::string& mod_path)
 bool hook_process_cb(uint32_t pid, const std::string& mod_path, const std::string& loader_path)
 {
     // init IPCInfo
-
+	pid;
     auto u16_mod_path = utf8_to_utf16(mod_path);
     auto u16_loader_path = utf8_to_utf16(loader_path);
     
@@ -324,6 +325,7 @@ bool hook_process_cb(uint32_t pid, const std::string& mod_path, const std::strin
     }
 
     SetWindowsHookEx(WH_CALLWNDPROC, hook_cb, loader_mod, 0);
+	return true;
 }
 
 }

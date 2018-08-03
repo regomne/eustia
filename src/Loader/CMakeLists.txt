@@ -1,5 +1,5 @@
 
-set(TARGET_NAME injector)
+set(TARGET_NAME loader)
 
 set(CURRENT_DIR .)
 set(THIRD_PARTY_DIR ${PROJECT_SOURCE_DIR}/third_party)
@@ -15,20 +15,21 @@ set(ALL_SRC_HDR_FILES
 )
 
 set(THIRD_PARTY_FILES
-  ${THIRD_PARTY_DIR}/cmdline/cmdline.h
+  
 )
 
 source_group(TREE ${PROJECT_SOURCE_DIR} PREFIX "Source" FILES ${ALL_SRC_HDR_FILES} ${THIRD_PARTY_FILES})
 
 SET_COMMON_COMPILER_FLAGS()
-SET_COMMON_EXE_LINKER_FLAGS()
+SET_COMMON_SHARED_LINKER_FLAGS()
 
-add_executable(${TARGET_NAME} ${ALL_SRC_HDR_FILES} ${THIRD_PARTY_FILES})
+add_library(${TARGET_NAME} SHARED ${ALL_SRC_HDR_FILES} ${THIRD_PARTY_FILES})
 
 target_include_directories(${TARGET_NAME} PRIVATE ${PROJECT_SOURCE_DIR})
 
 target_compile_definitions(${TARGET_NAME}
   PRIVATE ${EUSTIA_COMPILER_DEFINES}
+  _USRDLL
 )
 
 target_link_libraries(${TARGET_NAME}

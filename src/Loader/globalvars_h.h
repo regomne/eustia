@@ -5,7 +5,7 @@
 #include <string>
 
 #include "src/common.h"
-#include "src/ipc.h"
+#include "src/core/ipc.h"
 
 class GlobalVars
 {
@@ -40,7 +40,7 @@ public:
     HANDLE dll_handle;
     bool need_delay_check;
     intptr_t check_process_id;
-    eustia::IPCInfo ipc_info;;
+    eustia::LoaderIPC ipc_info;;
 };
 
 

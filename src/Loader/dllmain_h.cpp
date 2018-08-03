@@ -1,16 +1,16 @@
 #include <windows.h>
 #include <string>
 
-#include "src/log.h"
-#include "src/localization.h"
-#include "src/ipc.h"
-#include "src/utils.h"
-#include "src/HookDll/globalvars_h.h"
+#include "src/core/log.h"
+#include "src/misc/localization.h"
+#include "src/core/ipc.h"
+#include "src/misc/utils.h"
+#include "src/loader/globalvars_h.h"
 
 using namespace std;
 using namespace eustia;
 
-static ErrType CheckNeedLoadEustia(const IPCInfo* info, 
+static ErrType CheckNeedLoadEustia(const LoaderIPC* info, 
     bool* isLoadImmediately, 
     bool* isNeedSelfUnload,
     bool* isNeedDelayCheck) //check when hook callback runs
@@ -39,7 +39,7 @@ static ErrType CheckNeedLoadEustia(const IPCInfo* info,
     return ErrType::Success;
 }
 
-void LoadEustia(IPCInfo* info)
+void LoadEustia(LoaderIPC* info)
 {
     auto dllName = GlobalVars::get()->module_path + '/' + info->eusita_dll_name;
     LoadLibrary((wchar_t*)utf8_to_utf16(dllName).c_str());
@@ -69,7 +69,7 @@ static DWORD WINAPI MainProc(LPVOID _)
         return 0;
     }
     auto globals = GlobalVars::get();
-    globals->ipc_info = *(IPCInfo*)ptr0;
+    globals->ipc_info = *(LoaderIPC*)ptr0;
     ipc->dispose();
 
     bool isLoadImmediately;

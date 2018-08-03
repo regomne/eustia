@@ -1,4 +1,4 @@
-#include "src/config.h"
+#include "src/core/config.h"
 
 namespace eustia
 {

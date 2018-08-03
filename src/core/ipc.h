@@ -4,7 +4,7 @@
 #include <string>
 
 #include "src/common.h"
-#include "src/json_class.h"
+#include "src/misc/json_class.h"
 
 namespace eustia
 {
@@ -70,9 +70,9 @@ public:
     std::string to_string() override;
 
 public:
-    IPAddrType ip_addr_type;
-    uint8_t host_ip[16]; //usually 127.0.0.1
-    uint16_t host_port; //host port to connect, little endian
+    IPAddrType ip_addr_type_;
+    uint8_t host_ip_[16]; //usually 127.0.0.1
+    uint16_t host_port_; //host port to connect, little endian
 };
 
 class LoaderIPC :public IJsonClass

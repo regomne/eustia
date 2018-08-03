@@ -2,9 +2,9 @@
 #include <string>
 
 #include "src/common.h"
-#include "src/log.h"
-#include "src/utils.h"
-#include "src/localization.h"
+#include "src/core/log.h"
+#include "src/misc/utils.h"
+#include "src/misc/localization.h"
 #include "src/Injector/injector.h"
 #include "src/Injector/globalvars_i.h"
 #include "third_party/cmdline/cmdline.h"

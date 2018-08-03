@@ -1,8 +1,8 @@
-#include "src/ipc.h"
+#include "src/core/ipc.h"
 
 #include <string>
 
-#include "src/log.h"
+#include "src/core/log.h"
 #include "third_party/json/json.hpp"
 
 using namespace std;
@@ -118,6 +118,7 @@ ErrType MemoryIPC::open_ipc(const std::string& ipcMemName)
 //todo return bool
 static void convert_ip_addr(const std::string& ip_str,IPAddrType* ip_type, uint8_t* ip)
 {
+	ip;
     if (ip_str.find(':') != std::string::npos)
     {
         *ip_type = IPAddrType::IPv6;
@@ -152,8 +153,9 @@ bool EustiaIPC::parse(const std::string& json_str)
         LOGERROR("json data error!");
         return false;
     }
-    convert_ip_addr(std::string(*host_ip), &this->ip_addr_type, this->host_ip);
-    this->host_port = *host_port;
+	std::string s = *host_ip;
+    convert_ip_addr(s, &this->ip_addr_type_, this->host_ip_);
+    this->host_port_ = *host_port;
     return true;
 }
 

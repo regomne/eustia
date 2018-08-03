@@ -1,8 +1,8 @@
-#include "src/ipc.h"
+#include "src/core/ipc.h"
 
 #include <windows.h>
 
-#include "src/log.h"
+#include "src/core/log.h"
 
 namespace eustia
 {

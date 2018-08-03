@@ -1,4 +1,4 @@
-#include "src/log.h"
+#include "src/core/log.h"
 
 #include <cstdio>
 #include <ctime>

@@ -35,6 +35,12 @@ if(NOT CMAKE_BUILD_TYPE AND (GEN_NINJA OR GEN_MAKEFILES))
   message(WARNING "No CMAKE_BUILD_TYPE value selected, using ${CMAKE_BUILD_TYPE}")
 endif()
 
+if(PROJECT_ARCH STREQUAL "x86")
+  list(APPEND EUSTIA_COMPILER_DEFINES _X86_)
+elseif(PROJECT_ARCH STREQUAL "x86_64")
+  list(APPEND EUSTIA_COMPILER_DEFINES _AMD64_)
+endif()
+
 #
 # Linux configuration.
 #
@@ -144,9 +150,9 @@ if(OS_WINDOWS)
   list(APPEND EUSTIA_COMPILER_FLAGS
     /MP           # Multiprocess compilation
     /Gy           # Enable function-level linking
-    /GR-          # Disable run-time type information
     /W4           # Warning level 4
     /WX           # Treat warnings as errors
+    /EHa          # C++ Exception with SEH
     ${EUSTIA_DEBUG_INFO_FLAG}
     )
   list(APPEND EUSTIA_COMPILER_FLAGS_DEBUG
@@ -158,6 +164,7 @@ if(OS_WINDOWS)
     /Ob2          # Inline any suitable function
     /GF           # Enable string pooling
     )
+  set(EUSTIA_LINKER_FLAGS)
   list(APPEND EUSTIA_LINKER_FLAGS_DEBUG
     /DEBUG        # Generate debug information
     )
@@ -170,6 +177,7 @@ if(OS_WINDOWS)
     UNICODE _UNICODE                  # Unicode build
     WINVER=0x0601 _WIN32_WINNT=0x601  # Targeting Windows 7
     WIN32_LEAN_AND_MEAN               # Exclude less common API declarations
+    _CRT_SECURE_NO_WARNINGS           # No secure warnings
     )
   list(APPEND EUSTIA_COMPILER_DEFINES_RELEASE
     NDEBUG _NDEBUG                    # Not a debug build
